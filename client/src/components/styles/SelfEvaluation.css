@@ -741,3 +741,36 @@ body {
   border-radius: 8px;
   height: 100px;
 }
+
+
+/* Voice Input Styles */
+.voice-btn {
+  background: #4CAF50;
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  cursor: pointer;
+  margin: 0 5px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  transition: all 0.3s ease;
+}
+
+.voice-btn:hover {
+  background: #45a049;
+  transform: scale(1.1);
+}
+
+.voice-btn.active {
+  background: #f44336;
+  animation: pulse 1.5s infinite;
+}
+.listening-status {
+  margin-left: 10px;
+  font-size: 14px;
+  color: #666;
+}

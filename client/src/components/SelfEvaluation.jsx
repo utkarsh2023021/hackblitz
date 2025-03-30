@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef  } from "react";
 import { motion } from "framer-motion";
 import axios from "axios";
 import { jwtDecode } from "jwt-decode";
@@ -7,6 +7,7 @@ import Latex from 'react-latex';
 import "katex/dist/katex.min.css";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import { darcula } from "react-syntax-highlighter/dist/esm/styles/prism";
+import SpeechRecognition, { useSpeechRecognition } from 'react-speech-recognition';
 
 export default function SelfEvaluation() {
   const [question, setQuestion] = useState("Select a question");
@@ -25,6 +26,50 @@ export default function SelfEvaluation() {
   const [performanceData, setPerformanceData] = useState([]);
   const [loadingPerformance, setLoadingPerformance] = useState(true);
   const [activeTab, setActiveTab] = useState("evaluation");
+  const [isListening, setIsListening] = useState(false);
+  const [micError, setMicError] = useState(null);
+  const chatInputRef = useRef(null);
+  
+  const {
+    transcript,
+    listening,
+    resetTranscript,
+    browserSupportsSpeechRecognition,
+    isMicrophoneAvailable
+  } = useSpeechRecognition();
+
+ 
+
+  // Effect to update the chat input when transcript changes
+  useEffect(() => {
+    if (chatInputRef.current && transcript) {
+      chatInputRef.current.value = transcript;
+    }
+  }, [transcript]);
+
+  const toggleListening = async () => {
+    try {
+      if (isListening) {
+        await SpeechRecognition.stopListening();
+        setIsListening(false);
+      } else {
+        // Check microphone permissions first
+        const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+        stream.getTracks().forEach(track => track.stop());
+        
+        await SpeechRecognition.startListening({ 
+          continuous: true,
+          language: 'en-US'
+        });
+        setIsListening(true);
+        setMicError(null);
+      }
+    } catch (error) {
+      console.error("Microphone error:", error);
+      setMicError("Microphone access denied. Please allow microphone permissions.");
+      setIsListening(false);
+    }
+  };
 
   let userId = null;
   const token = localStorage.getItem("token");
@@ -150,6 +195,7 @@ export default function SelfEvaluation() {
   
     if (message.trim()) {
       setChatMessages((prev) => [...prev, { text: message, sender: "user" }]);
+      resetTranscript(); // Reset the voice transcript
       e.target.reset();
       setIsChatLoading(true);
   
@@ -277,6 +323,10 @@ export default function SelfEvaluation() {
     return `${mins}:${secs < 10 ? '0' : ''}${secs}`;
   };
 
+  if (!browserSupportsSpeechRecognition) {
+    return <span>Your browser doesn't support speech recognition.</span>;
+  }
+
   return (
     <div className="container">
       <div className="tabs">
@@ -401,6 +451,17 @@ export default function SelfEvaluation() {
 
             <form onSubmit={handleChatSend} className="chat-input">
               <input type="text" name="message" placeholder="Type a message..." required />
+              <button 
+          type="button" 
+          onClick={toggleListening}
+          className={`voice-btn ${isListening ? 'active' : ''}`}
+          title={isListening ? 'Stop listening' : 'Start voice input'}
+        >
+          {isListening ? '🛑' : '🎤'}
+        </button>
+        <button type="submit" disabled={isChatLoading}>
+          {isChatLoading ? "Sending..." : "Send"}
+        </button>
               <button type="submit" disabled={isChatLoading}>
                 {isChatLoading ? "Sending..." : "Send"}
               </button>
