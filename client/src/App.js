@@ -20,6 +20,7 @@ function App() {
           const decoded = jwtDecode(token);
           const response = await axios.get(`http://localhost:5000/api/auth/profile/${decoded.id}`);
           setUser(response.data.username);
+          localStorage.setItem("activeScreen",1);
           localStorage.setItem('username', response.data.username);
           setIsLoggedIn(true);
         } catch (error) {
