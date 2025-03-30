@@ -18,7 +18,7 @@ function App() {
       const userType=localStorage.getItem('userType');
       if (token && userType==='Student') {
         try {
-       
+          
           setIsLoading(true);
           const decoded = jwtDecode(token);
           const response = await axios.get(`http://localhost:5000/api/auth/profile/${decoded.id}`);

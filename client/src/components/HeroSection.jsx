@@ -12,8 +12,7 @@ import aiGif from "../icons/ai.gif";
 import aimsGif from '../icons/aims.gif';
 import visionGif from '../icons/vision.gif';
 import missionGif from '../icons/mission.gif';
-import Auth from "../Login";
-import { useState } from "react";
+
 import {
   faHome,
   faInfoCircle,
@@ -30,10 +29,9 @@ import {
 // Import the AboutUs component
 import AboutUs from "./AboutUs";
 
-function HeroSection({setActiveScreen, isLoggedIn, setIsLoggedIn, user, setUser,token, setToken, isDarkMode, setIsDarkMode, toggleAnnouncementPanel, announcementCount }) {
+function HeroSection() {
   const typedElement = useRef(null);
- const [showAuth, setShowAuth] = useState(false);
- const [authType, setAuthType] = useState("student");
+
   useEffect(() => {
     if (!typedElement.current) return; // Ensure ref exists before initializing Typed.js
 
@@ -60,28 +58,6 @@ function HeroSection({setActiveScreen, isLoggedIn, setIsLoggedIn, user, setUser,
       console.error("Element with ID 'avm-section' not found");
     }
   };
-  const handleAuthSuccess = () => {
-    setShowAuth(false);
-    window.location.reload();
-  };
-  const handleSignUp = () => {
-   alert("Sign Up button clicked!"); 
-   setShowAuth(true);// Placeholder for sign-up action
-  };
-
-  if (showAuth) {
-    return (
-      <Auth
-        user={user}
-        setUser={setUser}
-        onSuccess={handleAuthSuccess}
-        isLoggedIn={isLoggedIn}
-        setIsLoggedIn={setIsLoggedIn}
-        type={authType} // Pass the chosen type ("student" or "teacher")
-        authState="signup" // Set state as "login"
-      />
-    );
-  }
 
   return (
     <div className="hs-hero-section">
@@ -124,7 +100,7 @@ function HeroSection({setActiveScreen, isLoggedIn, setIsLoggedIn, user, setUser,
             education for everyone, everywhere.
           </p>
           <div className="hs-cta-buttons">
-            <button className="hs-cta-primary" onClick={handleSignUp}>Sign Up</button>
+            <button className="hs-cta-primary">Sign Up</button>
             <button className="hs-cta-secondary" onClick={scrollToAVM}>
               Learn More
             </button>
