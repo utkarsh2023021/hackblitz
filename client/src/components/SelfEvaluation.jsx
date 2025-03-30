@@ -28,6 +28,7 @@ export default function SelfEvaluation() {
   const [activeTab, setActiveTab] = useState("evaluation");
   const [isListening, setIsListening] = useState(false);
   const [micError, setMicError] = useState(null);
+  const [isPdfSectionPinned, setIsPdfSectionPinned] = useState(true);
   const chatInputRef = useRef(null);
   // Add new state for overlay visibility
   const [showOverlay, setShowOverlay] = useState(false);
@@ -533,34 +534,68 @@ export default function SelfEvaluation() {
               ))}
             </div>
 
-            <div className="file-upload-section">
-              <h2>Upload PDF File</h2>
-              <form onSubmit={handleFileUpload}>
-                <input
-                  type="file"
-                  accept=".pdf"
-                  onChange={(e) => setFile(e.target.files[0])}
-                />
-                <button type="submit" disabled={isUploading}>
-                  {isUploading ? "Uploading..." : "Upload"}
-                </button>
-                {file && (
-                  <button onClick={handleClearFile} className="clear-btn">
-                    Clear File
-                  </button>
-                )}
-              </form>
-              {uploadStatus && <p>{uploadStatus}</p>}
+            {/* PDF Upload Section with Pin Toggle */}
+            <div style={{ 
+              display: 'flex', 
+              justifyContent: 'space-between', 
+              alignItems: 'center',
+              borderBottom: '1px solid #eee',
+              paddingBottom: '5px',
+              marginBottom: '10px'
+            }}>
+              <h2 style={{ margin: 0 }}>Upload PDF File</h2>
+              <button 
+                onClick={() => setIsPdfSectionPinned(!isPdfSectionPinned)} 
+                style={{
+                  background: 'none',
+                  border: 'none',
+                  cursor: 'pointer',
+                  fontSize: '20px',
+                  color: isPdfSectionPinned ? '#007bff' : '#aaa',
+                  transform: isPdfSectionPinned ? 'rotate(-45deg)' : 'rotate(0deg)',
+                  transition: 'transform 0.3s, color 0.3s'
+                }}
+                title={isPdfSectionPinned ? "Hide PDF section" : "Show PDF section"}
+              >
+              +
+              </button>
             </div>
 
+            {isPdfSectionPinned && (
+              <motion.div 
+                className="file-upload-section"
+                initial={{ height: 0, opacity: 0 }}
+                animate={{ height: 'auto', opacity: 1 }}
+                exit={{ height: 0, opacity: 0 }}
+                transition={{ duration: 0.3 }}
+              >
+                <form onSubmit={handleFileUpload}>
+                  <input
+                    type="file"
+                    accept=".pdf"
+                    onChange={(e) => setFile(e.target.files[0])}
+                  />
+                  <button type="submit" disabled={isUploading}>
+                    {isUploading ? "Uploading..." : "Upload"}
+                  </button>
+                  {file && (
+                    <button onClick={handleClearFile} className="clear-btn">
+                      Clear File
+                    </button>
+                  )}
+                </form>
+                {uploadStatus && <p>{uploadStatus}</p>}
+              </motion.div>
+            )}
+
             <form onSubmit={handleChatSend} className="chat-input" style={{ position: 'relative', display: 'flex', alignItems: 'center' }}>
-              {/* New overlay toggle button */}
+              {/* Overlay toggle button */}
               <button 
                 type="button" 
                 onClick={toggleOverlay}
                 style={{
                   position: 'absolute',
-                  left: '-45px',
+                  left: '0',
                   width: '40px',
                   height: '40px',
                   borderRadius: '50%',
@@ -585,7 +620,13 @@ export default function SelfEvaluation() {
                 placeholder="Type a message..." 
                 required 
                 ref={chatInputRef}
-                style={{ flex: 1, padding: '10px' }}
+                style={{ 
+                  flex: 1,
+                  marginLeft: '50px', // Add space for the overlay button
+                  padding: '10px',
+                  borderRadius: '5px',
+                  border: '1px solid #ddd'
+                }}
               />
               <button 
                 type="button" 
