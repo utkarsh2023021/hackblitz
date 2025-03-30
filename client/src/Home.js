@@ -9,7 +9,7 @@ import TestCreator from "./components/TestCreator";
 import AboutUs from "./components/AboutUs";
 import { jwtDecode } from 'jwt-decode';
 import HeroSection from "./components/HeroSection";
-
+import Evaluate from "./components/Examevaluate";
 function Home1({ user, setUser ,isLoggedIn, setIsLoggedIn, token, setToken }) {
   const [isDarkMode, setIsDarkMode] = useState(false);
   const savedScreen = localStorage.getItem("activeScreen");
@@ -175,6 +175,7 @@ function Home1({ user, setUser ,isLoggedIn, setIsLoggedIn, token, setToken }) {
       {activeScreen === 4 && <AboutUs />}
       {activeScreen === 5 && <BookDonationPage />}
       {activeScreen === 7 && <SelfEvaluation />}
+      {activeScreen === 9 && <Evaluate />}
     </div>
   );
 }

@@ -14,23 +14,28 @@ function App() {
 
   useEffect(() => {
     const fetchUserData = async () => {
-      if (token) {
+      const userType=localStorage.getItem('userType');
+      if (token && userType==='Student') {
         try {
+       
           setIsLoading(true);
           const decoded = jwtDecode(token);
           const response = await axios.get(`http://localhost:5000/api/auth/profile/${decoded.id}`);
           setUser(response.data.username);
-          localStorage.setItem("activeScreen",1);
           localStorage.setItem('username', response.data.username);
           setIsLoggedIn(true);
         } catch (error) {
           console.error("Error fetching user data:", error);
           // Clear invalid token
-          localStorage.removeItem('token');
-          setToken('');
+          //localStorage.removeItem('token');
+        //  setToken('');
         } finally {
           setIsLoading(false);
         }
+      }
+      if (token && userType==='Teacher')
+      {
+        setIsLoggedIn(true);
       }
     };
 

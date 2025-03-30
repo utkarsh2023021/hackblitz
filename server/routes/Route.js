@@ -41,22 +41,48 @@ const upload = multer({ storage });
 
 router.get("/tests", async (req, res) => {
   try {
-    const { teacherId } = req.query;
-    console.log("this is the techer id coming from : "+teacherId);
+    const { teacherId, studentId } = req.query;
+    let query = {};
 
-    let tests;
     if (teacherId) {
       // Fetch tests created by the specific teacher
-      tests = await test.find({ teacherId });
-    } else {
-      // Fetch all tests (for students)
-      tests = await test.find({});
+      query.teacherId = teacherId;
+    } 
+    else if (studentId) {
+      // Get student with populated class information
+      const student = await User.findById(studentId).populate('class', 'name');
+      
+      if (!student) {
+        return res.status(404).json({ success: false, message: "Student not found." });
+      }
+      
+      if (!student.class) {
+        return res.status(400).json({ 
+          success: false, 
+          message: "Student has no class assigned." 
+        });
+      }
+
+      // Filter tests by the class name
+      query.level = student.class.name;
+    }
+    else {
+      // If neither teacherId nor studentId provided
+      return res.status(400).json({
+        success: false,
+        message: "Either teacherId or studentId must be provided"
+      });
     }
 
+    const tests = await test.find(query);
     res.json({ success: true, tests });
   } catch (err) {
     console.error(err);
-    res.status(500).json({ success: false, message: "Failed to fetch tests." });
+    res.status(500).json({ 
+      success: false, 
+      message: "Failed to fetch tests.",
+      error: err.message 
+    });
   }
 });
 

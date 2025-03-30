@@ -13,12 +13,12 @@ const TestComponent = () => {
   const [filterTopic, setFilterTopic] = useState("All");
   const [filterQuestions, setFilterQuestions] = useState("All");
   const [filterType, setFilterType] = useState("All");
-  const [filterStatus, setFilterStatus] = useState("All"); // New filter for test status
+  const [filterStatus, setFilterStatus] = useState("All"); 
   const [filterVisible, setFilterVisible] = useState(false);
   const [selectedTest, setSelectedTest] = useState(null);
   const [startTest, setStartTest] = useState(false);
   const [tests, setTests] = useState([]);
-  // userTestDetails is now an array of attempted test ID strings
+  
   const [userTestDetails, setUserTestDetails] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -35,21 +35,37 @@ const TestComponent = () => {
     }
   }
 
+  console.log("thsi is userId: " + userId);
+
   useEffect(() => {
     const fetchTests = async () => {
+      if (!userId) return; // Don't fetch if no user ID
+  
       try {
-        const response = await axios.get("http://localhost:5000/api/auth/tests");
-        setTests(response.data.tests);
-        setLoading(false);
+        setLoading(true);
+        setError(null);
+        
+        const response = await axios.get(`http://localhost:5000/api/auth/tests`, {
+          params: {
+            studentId: userId,
+          }
+        });
+  
+        if (response.data.success) {
+          setTests(response.data.tests);
+        } else {
+          setError(response.data.message || "Failed to fetch tests");
+        }
       } catch (err) {
-        console.error(err);
-        setError("Failed to fetch tests. Please try again.");
+        console.error("Fetch tests error:", err);
+        setError(err.response?.data?.message || "Failed to fetch tests. Please try again.");
+      } finally {
         setLoading(false);
       }
     };
-
+  
     fetchTests();
-  }, []);
+  }, [userId]); // Add userId as dependency
 
   // Fetch user test attempt details based on userId
   useEffect(() => {
@@ -241,10 +257,10 @@ const TestComponent = () => {
       ) : (
         <main className="test-main">
           {selectedTest.type === "multiple-choice" && (
-            <MCQQuiz setStartTest={setStartTest} questions={selectedTest.questions} testId={selectedTest._id} />
+            <MCQQuiz setStartTest={setStartTest} questions={selectedTest.questions} testId={selectedTest._id}  timeLimit={selectedTest.time} />
           )}
           {(selectedTest.type === "short-answer" || selectedTest.type === "long-answer") && (
-            <ShortAnswer setStartTest={setStartTest} questions={selectedTest.questions} testId={selectedTest._id} />
+            <ShortAnswer setStartTest={setStartTest} questions={selectedTest.questions} testId={selectedTest._id}  timeLimit={selectedTest.time} />
           )}
         </main>
       )}
