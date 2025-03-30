@@ -29,9 +29,13 @@ function Navbar({ setActiveScreen, isLoggedIn, setIsLoggedIn, user, setUser, isD
   const profileRef = useRef(null);
   const [isDiscussionDropdownOpen, setIsDiscussionDropdownOpen] = useState(false);
 
-  // New state for sign in dropdown
+  // New state for sign in dropdown and auth type selection
   const [showSignInOptions, setShowSignInOptions] = useState(false);
+  const [authType, setAuthType] = useState("student"); // "student" or "teacher"
   const signInDropdownRef = useRef(null);
+
+  // Read user type from local storage (it should be "Student" or "Teacher")
+  const userType = localStorage.getItem("userType");
 
   // Close sign in dropdown when clicked outside
   useEffect(() => {
@@ -76,21 +80,24 @@ function Navbar({ setActiveScreen, isLoggedIn, setIsLoggedIn, user, setUser, isD
   const handleLogout = () => {
     console.log("Attempting to log out...");
     localStorage.removeItem("token");
+    localStorage.removeItem("username");
+    localStorage.setItem("activeScreen", 1);
     setUser(null);
-    setSelectedNavItem(null); // Reset selected navigation item on logout
+    setSelectedNavItem(null);
     console.log("Logout successful.");
     window.location.reload();
   };
 
-  // Original handleSignIn for student sign in
+  // Handle student sign in and set authType to "student"
   const handleSignIn = () => {
+    setAuthType("student");
     setShowAuth(true);
     setShowSignInOptions(false);
   };
 
-  // New function for teacher sign in. Currently reusing student functionality.
+  // Handle teacher sign in and set authType to "teacher"
   const handleTeacherSignIn = () => {
-    // Add teacher-specific logic here later if needed.
+    setAuthType("teacher");
     setShowAuth(true);
     setShowSignInOptions(false);
   };
@@ -108,6 +115,8 @@ function Navbar({ setActiveScreen, isLoggedIn, setIsLoggedIn, user, setUser, isD
         onSuccess={handleAuthSuccess}
         isLoggedIn={isLoggedIn}
         setIsLoggedIn={setIsLoggedIn}
+        type={authType} // Pass the chosen type ("student" or "teacher")
+        authState="login" // Set state as "login"
       />
     );
   }
@@ -143,13 +152,28 @@ function Navbar({ setActiveScreen, isLoggedIn, setIsLoggedIn, user, setUser, isD
   const fullFirstName = (profileData?.username || user || "User").split(" ")[0];
   const displayName = isMobile ? fullFirstName.charAt(0) : fullFirstName;
 
-  const navItems = [
+  // Define base nav items; we'll filter based on user type.
+  const baseNavItems = [
     { id: 1, name: "Home", icon: <Home /> },
+    { id: 5, name: "Donate", icon: <Heart /> }
+  ];
+
+  // Student-specific items: show Test (id:3) and Self Evaluation (id:7)
+  const studentNavItems = [
     { id: 3, name: "Test", icon: <ClipboardList /> },
-    { id: 5, name: "Donate", icon: <Heart /> },
-    { id: 7, name: "Self Evaluation", icon: <BookOpenCheck /> },
+    { id: 7, name: "Self Evaluation", icon: <BookOpenCheck /> }
+  ];
+
+  // Teacher-specific items: show Evaluate (id:9)
+  const teacherNavItems = [
     { id: 9, name: "Evaluate", icon: <BookOpenCheck /> }
   ];
+
+  // Compute final nav items based on userType
+  const navItems =
+    userType === "Teacher"
+      ? [...baseNavItems, ...teacherNavItems]
+      : [...baseNavItems, ...studentNavItems];
 
   // Handle navigation clicks and toggle related components
   const handleNavClick = (screen) => {
@@ -166,8 +190,6 @@ function Navbar({ setActiveScreen, isLoggedIn, setIsLoggedIn, user, setUser, isD
     } else if (screen === 8) {
       setIsEvaluateOpen(true);
       setActiveScreen(null);
-    } else if (screen === 6) {
-      // Additional logic can be added here.
     } else {
       setActiveScreen(screen);
     }
@@ -215,34 +237,38 @@ function Navbar({ setActiveScreen, isLoggedIn, setIsLoggedIn, user, setUser, isD
         </div>
 
         {/* Center Navigation Links */}
-        {isLoggedIn && (<ul className="navbar-links">
-          {navItems.map((item) => (
-            <li
-              key={item.id}
-              className={`nav-item ${selectedNavItem === item.id ? "selected" : ""}`}
-              onMouseEnter={() => setHovered(item.id)}
-              onMouseLeave={() => setHovered(null)}
-              onClick={() => handleNavClick(item.id)}
-            >
-              <div className={`nav-icon ${hovered === item.id ? "hovered" : ""}`}>
-                {item.icon}
-                {hovered === item.id && <span className="icon-label">{item.name}</span>}
-              </div>
-            </li>
-          ))}
-          {/* Navigation Item for Test Creator */}
-          <li
-            className={`nav-item ${selectedNavItem === 6 ? "selected" : ""}`}
-            onMouseEnter={() => setHovered(6)}
-            onMouseLeave={() => setHovered(null)}
-            onClick={() => handleNavClick(6)}
-          >
-            <div className={`nav-icon ${hovered === 6 ? "hovered" : ""}`}>
-              <PlusCircle />
-              {hovered === 6 && <span className="icon-label">Create Test</span>}
-            </div>
-          </li>
-        </ul>)}
+        {isLoggedIn && (
+          <ul className="navbar-links">
+            {navItems.map((item) => (
+              <li
+                key={item.id}
+                className={`nav-item ${selectedNavItem === item.id ? "selected" : ""}`}
+                onMouseEnter={() => setHovered(item.id)}
+                onMouseLeave={() => setHovered(null)}
+                onClick={() => handleNavClick(item.id)}
+              >
+                <div className={`nav-icon ${hovered === item.id ? "hovered" : ""}`}>
+                  {item.icon}
+                  {hovered === item.id && <span className="icon-label">{item.name}</span>}
+                </div>
+              </li>
+            ))}
+            {/* For Teacher only: Navigation Item for Test Creator */}
+            {userType === "Teacher" && (
+              <li
+                className={`nav-item ${selectedNavItem === 6 ? "selected" : ""}`}
+                onMouseEnter={() => setHovered(6)}
+                onMouseLeave={() => setHovered(null)}
+                onClick={() => handleNavClick(6)}
+              >
+                <div className={`nav-icon ${hovered === 6 ? "hovered" : ""}`}>
+                  <PlusCircle />
+                  {hovered === 6 && <span className="icon-label">Create Test</span>}
+                </div>
+              </li>
+            )}
+          </ul>
+        )}
 
         {/* Right Section: Mode Toggle, Profile, and Sign In */}
         {isLoggedIn && (
@@ -273,9 +299,12 @@ function Navbar({ setActiveScreen, isLoggedIn, setIsLoggedIn, user, setUser, isD
                 <div className="profile-dropdown">
                   <img src={l} alt="Profile" className="profile-pic" />
                   <div className="profile-username">{fullFirstName}</div>
-                  <button className="view-profile-btn" onClick={handleViewProfile}>
-                    View Your Profile
-                  </button>
+                  {/* Show "View Your Profile" only if the user is not a teacher */}
+                  {userType !== "Teacher" && (
+                    <button className="view-profile-btn" onClick={handleViewProfile}>
+                      View Your Profile
+                    </button>
+                  )}
                   <button className="logout-button" onClick={handleLogout}>
                     Logout
                   </button>
@@ -323,9 +352,11 @@ function Navbar({ setActiveScreen, isLoggedIn, setIsLoggedIn, user, setUser, isD
             <li>
               <a onClick={() => handleNavClick(3)}>Chat</a>
             </li>
-            <li>
-              <a onClick={() => handleNavClick(6)}>Create Test</a>
-            </li>
+            {userType === "Teacher" && (
+              <li>
+                <a onClick={() => handleNavClick(6)}>Create Test</a>
+              </li>
+            )}
           </ul>
         </div>
       )}
