@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef  } from "react";
+import { useState, useEffect, useRef } from "react";
 import { motion } from "framer-motion";
 import axios from "axios";
 import { jwtDecode } from "jwt-decode";
@@ -29,6 +29,8 @@ export default function SelfEvaluation() {
   const [isListening, setIsListening] = useState(false);
   const [micError, setMicError] = useState(null);
   const chatInputRef = useRef(null);
+  // Add new state for overlay visibility
+  const [showOverlay, setShowOverlay] = useState(false);
   
   const {
     transcript,
@@ -37,8 +39,6 @@ export default function SelfEvaluation() {
     browserSupportsSpeechRecognition,
     isMicrophoneAvailable
   } = useSpeechRecognition();
-
- 
 
   // Effect to update the chat input when transcript changes
   useEffect(() => {
@@ -229,7 +229,6 @@ export default function SelfEvaluation() {
     }
   };
 
-
   const cleanMessageText = (text) => {
     if (!text) return "";
   
@@ -327,6 +326,11 @@ export default function SelfEvaluation() {
     return <span>Your browser doesn't support speech recognition.</span>;
   }
 
+  // Toggle function for the overlay
+  const toggleOverlay = () => {
+    setShowOverlay(!showOverlay);
+  };
+
   return (
     <div className="container">
       <div className="tabs">
@@ -346,67 +350,167 @@ export default function SelfEvaluation() {
 
       {activeTab === 'evaluation' ? (
         <>
-          <div className="right-section">
-            <motion.div 
-              className="upload-section" 
-              initial={{ y: 100, opacity: 0 }} 
-              animate={{ y: 0, opacity: 1 }} 
-              transition={{ duration: 0.5 }}
-            >
-              <h2>Upload Answer</h2>
-              <select
-                value={selectedQuestionNumber}
-                onChange={(e) => setSelectedQuestionNumber(parseInt(e.target.value))}
-                className="question-select"
-              >
-                {questions.map((q, index) => (
-                  <option key={index} value={index + 1}>
-                    Question {index + 1}: {q.substring(0, 30)}...
-                  </option>
-                ))}
-              </select>
-              <textarea
-                className="textarea"
-                placeholder="Type your answer..."
-                value={answer}
-                onChange={(e) => setAnswer(e.target.value)}
-              />
-              <div className="file-upload-container">
-                <label htmlFor="file-upload" className="file-upload-label">
-                  <span className="upload-icon">📁</span>
-                  <span className="upload-text">Choose a file</span>
-                  <input
-                    id="file-upload"
-                    type="file"
-                    onChange={(e) => setImage(e.target.files[0])}
-                    className="file-input"
-                  />
-                </label>
-                {image && (
-                  <motion.div 
-                    className="file-preview" 
-                    initial={{ opacity: 0, scale: 0.8 }} 
-                    animate={{ opacity: 1, scale: 1 }} 
-                    transition={{ duration: 0.3 }}
+          {/* Overlay for right-section */}
+          {showOverlay && (
+            <div style={{
+              position: 'fixed',
+              top: '0',
+              left: '0',
+              width: '100%',
+              height: '100%',
+              backgroundColor: 'rgba(0, 0, 0, 0.7)',
+              zIndex: '1000',
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center'
+            }}>
+              <div style={{
+                backgroundColor: 'white',
+                padding: '20px',
+                borderRadius: '10px',
+                width: '80%',
+                maxWidth: '600px',
+                maxHeight: '80vh',
+                overflowY: 'auto',
+                position: 'relative'
+              }}>
+                <button 
+                  onClick={toggleOverlay} 
+                  style={{
+                    position: 'absolute',
+                    top: '10px',
+                    right: '10px',
+                    backgroundColor: '#ff5555',
+                    color: 'white',
+                    border: 'none',
+                    borderRadius: '50%',
+                    width: '30px',
+                    height: '30px',
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    fontSize: '16px',
+                    cursor: 'pointer'
+                  }}
+                >
+                  ✕
+                </button>
+                <motion.div 
+                  className="upload-section" 
+                  initial={{ opacity: 0 }} 
+                  animate={{ opacity: 1 }} 
+                  transition={{ duration: 0.3 }}
+                >
+                  <h2>Upload Answer</h2>
+                  <select
+                    value={selectedQuestionNumber}
+                    onChange={(e) => setSelectedQuestionNumber(parseInt(e.target.value))}
+                    className="question-select"
+                    style={{
+                      width: '100%',
+                      padding: '10px',
+                      marginBottom: '15px',
+                      borderRadius: '5px',
+                      border: '1px solid #ddd'
+                    }}
                   >
-                    <span className="file-name">{image.name}</span>
-                    <span className="file-remove" onClick={() => setImage(null)}>
-                      🗑
-                    </span>
-                  </motion.div>
-                )}
+                    {questions.map((q, index) => (
+                      <option key={index} value={index + 1}>
+                        Question {index + 1}: {q.substring(0, 30)}...
+                      </option>
+                    ))}
+                  </select>
+                  <textarea
+                    className="textarea"
+                    placeholder="Type your answer..."
+                    value={answer}
+                    onChange={(e) => setAnswer(e.target.value)}
+                    style={{
+                      width: '100%',
+                      minHeight: '150px',
+                      padding: '10px',
+                      marginBottom: '15px',
+                      borderRadius: '5px',
+                      border: '1px solid #ddd',
+                      resize: 'vertical'
+                    }}
+                  />
+                  <div className="file-upload-container" style={{ marginBottom: '15px' }}>
+                    <label htmlFor="file-upload" style={{
+                      display: 'inline-block',
+                      padding: '10px 15px',
+                      backgroundColor: '#f0f0f0',
+                      borderRadius: '5px',
+                      cursor: 'pointer',
+                      border: '1px dashed #aaa'
+                    }}>
+                      <span style={{ marginRight: '5px' }}>📁</span>
+                      <span>Choose a file</span>
+                      <input
+                        id="file-upload"
+                        type="file"
+                        onChange={(e) => setImage(e.target.files[0])}
+                        style={{ display: 'none' }}
+                      />
+                    </label>
+                    {image && (
+                      <motion.div 
+                        style={{
+                          display: 'flex',
+                          alignItems: 'center',
+                          marginTop: '10px',
+                          padding: '5px 10px',
+                          backgroundColor: '#f8f8f8',
+                          borderRadius: '5px'
+                        }}
+                        initial={{ opacity: 0, scale: 0.8 }} 
+                        animate={{ opacity: 1, scale: 1 }} 
+                        transition={{ duration: 0.3 }}
+                      >
+                        <span style={{ flex: 1, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                          {image.name}
+                        </span>
+                        <span 
+                          style={{ cursor: 'pointer', color: '#ff5555', marginLeft: '10px' }}
+                          onClick={() => setImage(null)}
+                        >
+                          🗑
+                        </span>
+                      </motion.div>
+                    )}
+                  </div>
+                  <button 
+                    onClick={submitAnswer} 
+                    style={{
+                      width: '100%',
+                      padding: '12px',
+                      backgroundColor: '#4CAF50',
+                      color: 'white',
+                      border: 'none',
+                      borderRadius: '5px',
+                      fontSize: '16px',
+                      cursor: 'pointer',
+                      fontWeight: 'bold'
+                    }}
+                  >
+                    Submit Answer
+                  </button>
+                  {feedback && (
+                    <div style={{
+                      marginTop: '20px',
+                      padding: '15px',
+                      backgroundColor: '#f9f9f9',
+                      borderRadius: '5px',
+                      border: '1px solid #ddd'
+                    }}>
+                      <h3 style={{ marginTop: '0', color: '#333' }}>Feedback:</h3>
+                      <p style={{ whiteSpace: 'pre-line' }}>{feedback}</p>
+                    </div>
+                  )}
+                </motion.div>
               </div>
-              <button onClick={submitAnswer} className="submit-btn">
-                Submit Answer
-              </button>
-              {feedback && (
-                <div className="feedback-section">
-                  <h3>Feedback:</h3>
-                  <p>{feedback}</p>
-                </div>
-              )}
-            </motion.div>
-          </div>
+            </div>
+          )}
 
           <motion.div 
             className="chat-section" 
@@ -449,20 +553,72 @@ export default function SelfEvaluation() {
               {uploadStatus && <p>{uploadStatus}</p>}
             </div>
 
-            <form onSubmit={handleChatSend} className="chat-input">
-              <input type="text" name="message" placeholder="Type a message..." required />
+            <form onSubmit={handleChatSend} className="chat-input" style={{ position: 'relative', display: 'flex', alignItems: 'center' }}>
+              {/* New overlay toggle button */}
               <button 
-          type="button" 
-          onClick={toggleListening}
-          className={`voice-btn ${isListening ? 'active' : ''}`}
-          title={isListening ? 'Stop listening' : 'Start voice input'}
-        >
-          {isListening ? '🛑' : '🎤'}
-        </button>
-        <button type="submit" disabled={isChatLoading}>
-          {isChatLoading ? "Sending..." : "Send"}
-        </button>
-              <button type="submit" disabled={isChatLoading}>
+                type="button" 
+                onClick={toggleOverlay}
+                style={{
+                  position: 'absolute',
+                  left: '-45px',
+                  width: '40px',
+                  height: '40px',
+                  borderRadius: '50%',
+                  backgroundColor: '#4CAF50',
+                  color: 'white',
+                  border: 'none',
+                  display: 'flex',
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  fontSize: '16px',
+                  cursor: 'pointer',
+                  boxShadow: '0 2px 5px rgba(0,0,0,0.2)',
+                  zIndex: '5'
+                }}
+                title="Open answer form"
+              >
+                ✎
+              </button>
+              <input 
+                type="text" 
+                name="message" 
+                placeholder="Type a message..." 
+                required 
+                ref={chatInputRef}
+                style={{ flex: 1, padding: '10px' }}
+              />
+              <button 
+                type="button" 
+                onClick={toggleListening}
+                style={{
+                  marginLeft: '5px',
+                  padding: '0 15px',
+                  height: '40px',
+                  backgroundColor: isListening ? '#ff5555' : '#f0f0f0',
+                  color: isListening ? 'white' : 'black',
+                  border: 'none',
+                  borderRadius: '5px',
+                  cursor: 'pointer'
+                }}
+                title={isListening ? 'Stop listening' : 'Start voice input'}
+              >
+                {isListening ? '🛑' : '🎤'}
+              </button>
+              <button 
+                type="submit" 
+                disabled={isChatLoading}
+                style={{
+                  marginLeft: '5px',
+                  padding: '0 15px',
+                  height: '40px',
+                  backgroundColor: '#007bff',
+                  color: 'white',
+                  border: 'none',
+                  borderRadius: '5px',
+                  cursor: 'pointer',
+                  opacity: isChatLoading ? '0.7' : '1'
+                }}
+              >
                 {isChatLoading ? "Sending..." : "Send"}
               </button>
             </form>

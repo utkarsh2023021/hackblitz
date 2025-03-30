@@ -332,9 +332,9 @@ const BookDonationPage = () => {
                     justifyContent: 'space-between',
                     alignItems: 'center'
                   }}>
-                    <span>
-                      <strong>{notif.requestedBy.username}</strong>: {notif.message} (Donation: {notif.donation.item})
-                    </span>
+<span>
+  <strong>{notif.requestedBy?.username || 'Unknown User'}</strong>: {notif.message} (Donation: {notif.donation?.item || 'Unknown Donation'})
+</span>
                     <button
                       onClick={() => handleDeleteNotification(notif._id)}
                       style={{

@@ -452,10 +452,10 @@ function TestCreator({ teacherId, onClose }) {
                         ))}
                       </ul>
                     )}
-                    <p>
+                    <p style={{color: "blue"}}>
                       <strong>Correct Answer:</strong> {question.correctAnswer}
                     </p>
-                    <p>
+                    <p style={{color:"green"}}>
                       <strong>Explanation:</strong>{" "}
                       {question.explanation?.correct ||
                         "No explanation provided."}
