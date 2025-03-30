@@ -169,13 +169,39 @@ function Home1({ user, setUser ,isLoggedIn, setIsLoggedIn, token, setToken }) {
         </div>
       )}
       
-      {activeScreen === 1 && <HeroSection/>}
-      {activeScreen === 2 && <DiscussionSection />}
-      {activeScreen === 3 && <TestComponent />}
-      {activeScreen === 4 && <AboutUs />}
-      {activeScreen === 5 && <BookDonationPage />}
-      {activeScreen === 7 && <SelfEvaluation />}
-      {activeScreen === 9 && <Evaluate />}
+      
+  {activeScreen === 1 ? (
+    <>
+      <HeroSection setActiveScreen={setActiveScreen}
+        user={user}
+        setUser={setUser}
+        token={token}
+        setToken={setToken}
+        isDarkMode={isDarkMode}
+        setIsDarkMode={setIsDarkMode}
+        // Pass the announcement count and toggle function to Navbar
+        announcementCount={announcements.length}
+        toggleAnnouncementPanel={toggleAnnouncementPanel}
+        isLoggedIn={isLoggedIn}
+        setIsLoggedIn={setIsLoggedIn}/>
+    </>
+  ) : activeScreen === 2 ? (
+    <DiscussionSection />
+  ) : activeScreen === 3 ? (
+    <TestComponent />
+  ) : activeScreen === 4 ? (
+    <AboutUs />
+  ) : activeScreen === 5 ? (
+    <BookDonationPage />
+  ) : activeScreen === 7 ? (
+    <SelfEvaluation />
+  ) : activeScreen === 9 ? (
+    <Evaluate />
+  ) : (
+    <p>Invalid Screen</p>
+  )}
+
+
     </div>
   );
 }
