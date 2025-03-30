@@ -27,12 +27,14 @@ function Navbar({ setActiveScreen, isLoggedIn, setIsLoggedIn, user, setUser, isD
   const [showAuth, setShowAuth] = useState(false);
   const [selectedNavItem, setSelectedNavItem] = useState(null); // Track selected nav item
   const profileRef = useRef(null);
+  const dropdownRef = useRef(null);
   const [isDiscussionDropdownOpen, setIsDiscussionDropdownOpen] = useState(false);
 
   // New state for sign in dropdown and auth type selection
   const [showSignInOptions, setShowSignInOptions] = useState(false);
   const [authType, setAuthType] = useState("student"); // "student" or "teacher"
   const signInDropdownRef = useRef(null);
+  
 
   // Read user type from local storage (it should be "Student" or "Teacher")
   const userType = localStorage.getItem("userType");
@@ -69,6 +71,25 @@ function Navbar({ setActiveScreen, isLoggedIn, setIsLoggedIn, user, setUser, isD
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setIsDiscussionDropdownOpen(false);
+      }
+    };
+
+    if (isDiscussionDropdownOpen) {
+      document.addEventListener('mousedown', handleClickOutside);
+    } else {
+      document.removeEventListener('mousedown', handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [isDiscussionDropdownOpen]);
+
 
   // Toggle between dark and light mode
   const toggleTheme = () => {
@@ -277,11 +298,13 @@ function Navbar({ setActiveScreen, isLoggedIn, setIsLoggedIn, user, setUser, isD
               <Bell />
               {announcementCount > 0 && <span className="announcement-badge">{announcementCount}</span>}
             </div>
+            
             <div className="discussion-icon" onClick={() => setIsDiscussionDropdownOpen(!isDiscussionDropdownOpen)}>
               <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor" style={{ cursor: "pointer" }}>
                 <path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z" />
               </svg>
             </div>
+            
             <img
               src={isDarkMode ? lightmode : darkmode}
               alt={isDarkMode ? "Light Mode" : "Dark Mode"}
@@ -311,9 +334,9 @@ function Navbar({ setActiveScreen, isLoggedIn, setIsLoggedIn, user, setUser, isD
                 </div>
               )}
             </div>
-            <div className={`discussion-dropdown ${isDiscussionDropdownOpen ? "open" : ""}`}>
-              <DiscussionSection />
-            </div>
+            <div className={`discussion-dropdown ${isDiscussionDropdownOpen ? "open" : ""}`} ref={dropdownRef}>
+      <DiscussionSection />
+    </div>
           </div>
         )}
         {!isLoggedIn && (

@@ -7,6 +7,11 @@ import { FaFacebookF, FaTwitter, FaLinkedinIn, FaInstagram } from "react-icons/f
 import sdg4Icon from "../icons/sdg4-icon2.png";
 import expGif from "../icons/exp.gif";
 import assessGif from "../icons/assess.gif";
+import discGif from "../icons/disc.gif";
+import aiGif from "../icons/ai.gif";
+import aimsGif from '../icons/aims.gif';
+import visionGif from '../icons/vision.gif';
+import missionGif from '../icons/mission.gif';
 
 import {
   faHome,
@@ -107,29 +112,75 @@ function HeroSection() {
       </div>
 
       {/* Aims, Vision, Mission Section */}
-      <div id="avm-section" className="hs-aims-vision-mission">
-  <div className="hs-section-card">
-    <div className="hs-section-content">
-      <h2 className="hs-section-title">Our Aims</h2>
-      <p>Providing access to quality education for all, promoting lifelong learning, and reducing educational inequalities.</p>
+      <div id="avm-section" className="avm-container">
+  {/* Aims Card */}
+  <div className="avm-card">
+    <div className="avm-gif-container">
+      <img 
+        src={aimsGif} 
+        alt="Aims icon" 
+        className="avm-gif"
+        style={{
+          width: '220px',         // Control GIF size relative to container
+          height: '220px',        // Maintain aspect ratio
+          objectFit: 'cover',    // 'cover' fills circle, 'contain' shows full GIF
+          objectPosition: 'center', // Adjust if needed ('top', 'left', etc.)
+          borderRadius: '50%',   // Ensure circular shape
+          transform: 'translateY(0px)' // Fine-tune vertical position
+        }}
+      />
     </div>
-    <div className="hs-section-image">Image Here</div>
+    <div className="avm-content">
+      <h2 className="avm-title">Our Aims</h2>
+      <p className="avm-description">Providing access to quality education for all, promoting lifelong learning, and reducing educational inequalities.</p>
+    </div>
   </div>
 
-  <div className="hs-section-card">
-    <div className="hs-section-content">
-      <h2 className="hs-section-title">Our Vision</h2>
-      <p>To create a world where every individual has the opportunity to learn, grow, and achieve their fullest potential.</p>
+  {/* Vision Card */}
+  <div className="avm-card">
+    <div className="avm-gif-container">
+      <img 
+        src={visionGif} 
+        alt="Vision icon" 
+        className="avm-gif"
+        style={{
+          width: '170px',
+          height: '170px',
+          objectFit: 'contain',
+          objectPosition: 'top center',
+          borderRadius: '50%',
+          transform: 'scale(1.1)' // Zoom in slightly
+        }}
+      />
     </div>
-    <div className="hs-section-image">Image Here</div>
+    <div className="avm-content">
+      <h2 className="avm-title">Our Vision</h2>
+      <p className="avm-description">To create a world where every individual has the opportunity to learn, grow, and achieve their fullest potential.</p>
+    </div>
   </div>
 
-  <div className="hs-section-card">
-    <div className="hs-section-content">
-      <h2 className="hs-section-title">Our Mission</h2>
-      <p>Empowering students and educators with resources, support, and technology to advance education globally.</p>
+  {/* Mission Card */}
+  <div className="avm-card">
+    <div className="avm-gif-container">
+      <img 
+        src={missionGif} 
+        alt="Mission icon" 
+        className="avm-gif"
+        style={{
+          width: '150px',
+          height: '150px',
+          objectFit: 'cover',
+          objectPosition: 'center 30%', // Adjust vertical focus
+          borderRadius: '50%',
+          filter: 'brightness(1.05)',
+          transform: 'translateY(3px)' // Slight enhancement
+        }}
+      />
     </div>
-    <div className="hs-section-image">Image Here</div>
+    <div className="avm-content">
+      <h2 className="avm-title">Our Mission</h2>
+      <p className="avm-description">Empowering students and educators with resources, support, and technology to advance education globally.</p>
+    </div>
   </div>
 </div>
 
@@ -150,10 +201,20 @@ function HeroSection() {
         </div>
         <div className="ai-feature-media">
           <img 
-            src="https://media.giphy.com/media/l378khQxt68syiWJy/giphy.gif" 
-            alt="AI learning features" 
-            className="ai-feature-gif"
-            loading="lazy"
+             src={aiGif} 
+             alt="User experience" 
+             loading="lazy"
+             onError={(e) => {
+               e.target.onerror = null; 
+               e.target.src = 'https://media.giphy.com/media/3o7TKsQ8XfDQsHJuUM/giphy.gif';
+             }}
+             style={{
+               marginTop:"10px",
+               width: "80%",
+               height: "65vh",
+           
+               transform: "scaleX(-1)"
+             }} 
           />
         </div>
       </div>
@@ -170,10 +231,20 @@ function HeroSection() {
         </div>
         <div className="ai-feature-media">
           <img 
-            src="https://media.giphy.com/media/3o7aD2d7hy9ktXNDP2/giphy.gif" 
-            alt="Interactive learning" 
-            className="ai-feature-gif"
-            loading="lazy"
+             src={discGif} 
+             alt="User experience" 
+             loading="lazy"
+             onError={(e) => {
+               e.target.onerror = null; 
+               e.target.src = 'https://media.giphy.com/media/3o7TKsQ8XfDQsHJuUM/giphy.gif';
+             }}
+             style={{
+               marginTop:"10px",
+               width: "80%",
+               height: "65vh",
+           
+               transform: "scaleX(-1)"
+             }} 
           />
         </div>
       </div>

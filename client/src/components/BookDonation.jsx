@@ -472,6 +472,7 @@ const BookDonationPage = () => {
                   allTags={allTags}
                   onApply={applyOthersDonationsFilters}
                   onClose={() => setShowFilterDropdown2(false)}
+                  style={{ color: "black" }}
                 />
               )}
               <div>
