@@ -264,8 +264,9 @@ const Auth = ({ user, setUser, isLoggedIn, setIsLoggedIn, type, authState }) => 
     }
   }, [setUser, setIsLoggedIn]);
 
-  // If logged in, show the Home component
+  
   if (isLoggedIn) {
+    localStorage.setItem("activeScreen", 1);
     return <Home user={user} isLoggedIn={isLoggedIn} setUser={setUser} token={localStorage.getItem('token')} />;
   }
 

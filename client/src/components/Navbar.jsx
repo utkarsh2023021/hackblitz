@@ -11,7 +11,7 @@ import ProfileBookModal from "./ProfileBookModal"; // Ensure the path is correct
 import { jwtDecode } from "jwt-decode";
 import DiscussionSection from "./Discussion";
 import Auth from "../Login";
-import Evaluate from "./examevaluate";
+import Evaluate from "./Examevaluate";
 
 function Navbar({ setActiveScreen, isLoggedIn, setIsLoggedIn, user, setUser,token, setToken, isDarkMode, setIsDarkMode, toggleAnnouncementPanel, announcementCount }) {
   // Existing state variables
@@ -282,12 +282,7 @@ function Navbar({ setActiveScreen, isLoggedIn, setIsLoggedIn, user, setUser,toke
                 <path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z" />
               </svg>
             </div>
-            <img
-              src={isDarkMode ? lightmode : darkmode}
-              alt={isDarkMode ? "Light Mode" : "Dark Mode"}
-              className="mode-toggle icon-image"
-              onClick={toggleTheme}
-            />
+           
             <div className="profile-container" ref={profileRef}>
               <img
                 src={l}
@@ -318,12 +313,7 @@ function Navbar({ setActiveScreen, isLoggedIn, setIsLoggedIn, user, setUser,toke
         )}
         {!isLoggedIn && (
           <div className="navbar-right" style={{ position: "relative" }}>
-            <img
-              src={isDarkMode ? lightmode : darkmode}
-              alt={isDarkMode ? "Light Mode" : "Dark Mode"}
-              className="mode-toggle icon-image"
-              onClick={toggleTheme}
-            />
+         
             <button className="signinButton" onClick={() => setShowSignInOptions(!showSignInOptions)}>
               Sign In
             </button>
