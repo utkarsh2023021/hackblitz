@@ -1,7 +1,7 @@
 import User from '../models/User.js';
 import Test from '../models/test.js';
 
-//  user performance data with detailed test info
+// Get user performance data with detailed test information
 export const studentOwnTest = async (req, res) => {
     try {
         const userId = req.params.userId;
@@ -48,7 +48,7 @@ export const studentOwnTest = async (req, res) => {
         res.json({
             success: true,
             count: performanceData.length,
-            data: performanceData 
+            data: performanceData // Always an array
         });
         
     } catch (error) {
@@ -56,7 +56,7 @@ export const studentOwnTest = async (req, res) => {
         res.status(500).json({ 
             success: false,
             message: 'Failed to fetch performance data',
-            data: [], 
+            data: [], // Return empty array on error
             error: error.message 
         });
     }

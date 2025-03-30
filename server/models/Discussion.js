@@ -3,7 +3,7 @@ import mongoose from 'mongoose';
 
 const messageSchema = new mongoose.Schema({
   sender: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
-  senderName: { type: String, required: true }, //  field for the sender's name
+  senderName: { type: String, required: true }, // Added field for the sender's name
   message: { type: String, required: true },
   createdAt: { type: Date, default: Date.now }
 });

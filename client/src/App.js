@@ -1,23 +1,53 @@
-import logo from './logo.svg';
 import './App.css';
+import Auth from './Login';
+import { useState, useEffect } from 'react';
+import Home from  "./Home"
+import {jwtDecode} from 'jwt-decode';
+import axios from 'axios';
+
 
 function App() {
+  const [user, setUser] = useState(localStorage.getItem('username') || null);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [token, setToken] = useState(localStorage.getItem('token') || '');
+
+  useEffect(() => {
+    const fetchUserData = async () => {
+      if (token) {
+        try {
+          setIsLoading(true);
+          const decoded = jwtDecode(token);
+          const response = await axios.get(`http://localhost:5000/api/auth/profile/${decoded.id}`);
+          setUser(response.data.username);
+          localStorage.setItem('username', response.data.username);
+          setIsLoggedIn(true);
+        } catch (error) {
+          console.error("Error fetching user data:", error);
+          // Clear invalid token
+          localStorage.removeItem('token');
+          setToken('');
+        } finally {
+          setIsLoading(false);
+        }
+      }
+    };
+
+    fetchUserData();
+  }, [token]);
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      {!isLoading && (
+        <Home
+          user={user}
+          setUser={setUser}
+          isLoggedIn={isLoggedIn}
+          setIsLoggedIn={setIsLoggedIn}
+          token={token}
+          setToken={setToken}
+        />
+      )}
     </div>
   );
 }

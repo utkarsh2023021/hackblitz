@@ -1,7 +1,7 @@
 import mongoose from 'mongoose';
 const { Schema } = mongoose;
 
-// sub-schema for test attempts
+// Define a sub-schema for test attempts
 const testAttemptSchema = new Schema({
   test: { type: Schema.Types.ObjectId, ref: 'Test', required: true },
   status: { type: String, enum: ['attempted', 'not_attempted'], default: 'not_attempted' },
@@ -19,7 +19,7 @@ const testAttemptSchema = new Schema({
   }]
 });
 
-// sub-schema for notifications
+// Define a sub-schema for notifications
 const notificationSchema = new Schema({
   requestedBy: { type: Schema.Types.ObjectId, ref: 'User', required: true },
   message: { type: String, required: true },

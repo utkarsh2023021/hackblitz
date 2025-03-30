@@ -1,38 +1,65 @@
-.App {
+
+.auth-box {
+  width: 300px;
+  height: fit-content;
+  padding: 30px;
+  border-radius: 8px;
+  background-color:transparent;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   text-align: center;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+.auth-box h2 {
+  margin-bottom: 0px;
+  font-size: 40px;
+  color: #ffffff;
+  text-align: center;
+  padding: 40px;
+}
+.auth-box p {
+  margin-bottom: 0px;
+  color: #ffffff;
+ 
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+.auth-box input {
+  width: 90%;
+  padding: 10px;
+  margin: 10px 0;
+  border: 3px solid #ccc;
+  border-radius: 20px;
+  font-size: 16px;
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
+.auth-box button {
+  width: 95%;
+  padding: 12px;
+  margin-top: 10px;
+  background-color: #1d2f32;
   color: white;
+  border: none;
+  border-radius: 4px;
+  font-size: 16px;
+  cursor: pointer;
 }
 
-.App-link {
-  color: #61dafb;
+.auth-box button:hover {
+  background-color: #0056b3;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.toggle-btn {
+  background: none;
+  border: none;
+  color: #b39040;
+  cursor: pointer;
+  margin-left: 5px;
+}
+
+.toggle-btn:hover {
+  text-decoration: underline;
+}
+
+.message {
+  margin-top: 15px;
+  color: green;
 }

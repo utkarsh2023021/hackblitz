@@ -1,0 +1,218 @@
+/* Base container for About Us */
+.about-us {
+  width: 80%;
+  margin: 50px auto;
+  padding: 30px 20px;
+  /* background: linear-gradient(135deg, #ffffff, #f0f0f0); */
+  border-radius: 15px;
+  /* box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15); */
+  text-align: center;
+  overflow: hidden;
+  position: relative;
+  animation: fadeIn 1s ease-in;
+}
+
+.about-us.dark {
+  background: linear-gradient(135deg, #2a2a2a, #1a1a1a);
+}
+
+/* Fade In Animation */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Info Section */
+.info-section {
+  margin-bottom: 30px;
+  position: relative;
+  z-index: 3;
+}
+
+.heading {
+  font-size: 2.8rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  margin-bottom: 10px;
+  letter-spacing: 1px;
+}
+
+.heading-light {
+  color: #333;
+}
+
+.heading-dark {
+  color: #f5f5f5;
+}
+
+.paragraph {
+  font-size: 1.2rem;
+  font-weight: 500;
+  margin-bottom: 25px;
+  line-height: 1.5;
+}
+
+.paragraph-light {
+  color: #555;
+}
+
+.paragraph-dark {
+  color: #e0e0e0;
+}
+
+/* Cards Grid Layout */
+.cards-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 30px;
+}
+
+/* Card Styles */
+.card {
+  width: 270px;
+  padding: 20px;
+  border-radius: 15px;
+  text-align: center;
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(5px);
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+  color: #333;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.card:hover {
+  transform: scale(1.05);
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.4);
+  background: linear-gradient(135deg, #ffffff, #e0e0e0);
+}
+
+/* Member Image */
+.member-image {
+  width: 200px;
+  height: 200px;
+  object-fit: cover;
+  border-radius: 50%;
+  margin-bottom: 15px;
+  border: 4px solid #ffcc00;
+  transition: transform 0.3s ease;
+}
+
+.card:hover .member-image {
+  transform: scale(1.05);
+}
+
+/* Member Text */
+.member-name {
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin-bottom: 5px;
+}
+
+.member-name-light {
+  color: #222;
+}
+
+.member-name-dark {
+  color: #f1f1f1;
+}
+
+.member-role {
+  font-size: 1.1rem;
+  font-weight: 500;
+  margin-bottom: 10px;
+}
+
+.member-role-light {
+  color: #555;
+}
+
+.member-role-dark {
+  color: #bbb;
+}
+
+.member-info {
+  font-size: 0.95rem;
+  font-weight: 400;
+  margin-top: 10px;
+  color: #777;
+}
+
+.member-info-light {
+  color: #444;
+}
+
+.member-info-dark {
+  color: #bbb;
+}
+
+/* Three Circles for Social Links */
+.three-circles {
+  margin-top: 15px;
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  position: relative;
+}
+
+.circle-wrapper {
+  position: relative;
+  width: 60px;
+  height: 60px;
+  overflow: visible;
+}
+
+.circle-wrapper span {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 60px;
+  height: 60px;
+  background: rgba(199, 197, 197, 0.25);
+  backdrop-filter: blur(10px);
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  opacity: 0;
+  transition: transform 0.4s ease, opacity 0.4s ease;
+  transform: translate(-50%, -50%);
+  z-index: 10;
+}
+
+.card:hover .circle-wrapper span {
+  opacity: 1;
+}
+
+/* Staggered Hover Effect */
+.circle-wrapper span:nth-child(1) {
+  transform: translate(-50%, -50%);
+}
+.circle-wrapper span:nth-child(2) {
+  transform: translate(-50%, -50%);
+}
+.circle-wrapper span:nth-child(3) {
+  transform: translate(-50%, -50%);
+}
+
+.circle-wrapper:hover span:nth-child(2) {
+  transform: translate(-45%, -55%);
+}
+
+.circle-wrapper:hover span:nth-child(3) {
+  transform: translate(-40%, -60%);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .cards-container {
+    flex-direction: column;
+    gap: 20px;
+  }
+  .heading {
+    font-size: 2.2rem;
+  }
+  .member-image {
+    width: 150px;
+    height: 150px;
+  }
+}

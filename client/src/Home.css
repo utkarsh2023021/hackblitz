@@ -1,0 +1,245 @@
+
+
+  /* xyz container styles */
+  .xyz {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    height: 70%;
+    text-align: center;
+    padding: 100px;
+    background-color: rgba(255, 255, 255, 0.9); /* Corrected background color */
+    border-radius: 12px; /* Corrected border radius */
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3); /* Corrected box shadow */
+    width: 350px; /* Corrected width */
+  }
+  
+  /* Sign-in button styles */
+  .sign {
+    width: 200px;
+    padding: 10px 20px;
+    font-size: 16px;
+    background-color: #4285F4;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    margin-top: 15px;
+  }
+  
+  /* Start screen section styles */
+  .start-screen-section {
+    top: 80px;
+    flex-grow: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  /* Light mode background */
+  body {
+   background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+  }
+  body.dark-mode {
+    /* Optional: Darken the image using a filter */
+    background-color: black; /* Fallback color */
+    filter: brightness(0.7); /* Optional darkening effect */
+    /* Notice: No "background-image: none;" here */
+  }
+  
+  /* Logo container */
+  .logo {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 0px;
+    z-index: 1;
+  }
+  
+  /* Logo image styles */
+  .logo img {
+    width: 150px;
+    height: 150px;
+    padding: 10px 10px;
+  }
+  
+  /* App name text styles */
+  .name {
+    font-size: 40px;
+    font-weight: bold;
+    display: block;
+    color: #333;
+    z-index: 2;
+  }
+
+/* Announcement Section Container */
+/* Enhanced Announcement Section Container */
+.announcement-section {
+  width: 25%;
+  padding: 1.5rem;
+  background: linear-gradient(135deg, #ffffff, #f9f9f9);
+  border-radius: 1.2rem;
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.2);
+  position: fixed;
+  top: 8.5rem;
+  right: 1rem;
+  z-index: 10;
+  max-height: calc(100vh - 5rem);
+  overflow-y: auto;
+  transition: background 0.3s ease, box-shadow 0.3s ease, transform 0.3s ease;
+  animation: fadeIn 0.8s ease-out;
+}
+
+/* Fade-in animation for the container */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateX(20px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+/* Enhanced Announcement Title Styling */
+.announcement-title {
+  text-align: center;
+  font-size: 1.6rem;
+  font-weight: bold;
+  margin-bottom: 1rem;
+  color: #111827;
+  border-bottom: 3px solid #007bff;
+  padding-bottom: 0.5rem;
+  letter-spacing: 0.5px;
+}
+
+body.dark-mode .announcement-title {
+  color: #f9fafb !important;
+  border-bottom: 3px solid #4f46e5 !important;
+}
+
+/* Enhanced Announcement List Container */
+.announcement-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+/* Enhanced Individual Announcement Item */
+.announcement-item {
+  position: relative;
+  display: flex;
+  align-items: start;
+  gap: 0.5rem;
+  padding: 0.75rem 0.5rem;
+  border-radius: 0.5rem;
+  background: rgba(255, 255, 255, 0.9);
+  transition: background-color 0.3s ease, transform 0.3s ease,
+              box-shadow 0.3s ease, border-left 0.3s ease;
+  cursor: pointer;
+}
+
+body.dark-mode .announcement-section {
+  background: linear-gradient(135deg, #1f2937, #2d3748) !important;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.25) !important;
+  color: #f1f1f1 !important;
+}
+
+body.dark-mode .announcement-title {
+  color: #f9fafb;
+  border-bottom: 3px solid #4f46e5;
+}
+
+body.dark-mode .announcement-item {
+  background: rgba(31, 41, 55, 0.8) !important;
+  color: #f1f1f1 !important;
+}
+
+body.dark-mode .announcement-text small {
+  color: #ccc !important;
+}
+
+/* (Optional) Adjust tick button in dark mode if needed */
+body.dark-mode .tick-button {
+  background: #4f6d7a !important;
+  color: #fff;
+}
+
+body.dark-mode .tick-button:hover {
+  background: #3b5568 !important;
+}
+
+.announcement-item:hover {
+  background-color: #e5e7eb;
+  transform: translateX(5px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+  border-left: 4px solid #007bff;
+}
+
+body.dark-mode .announcement-item:hover {
+  background-color: #374151;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  border-left: 4px solid #4f46e5;
+}
+
+/* Enhanced Tick Button Styles */
+.tick-button {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  background: #2d6a4f;
+  border: none;
+  font-size: 16px;
+  color: #fff;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 20;
+  transition: background 0.3s ease, transform 0.3s ease;
+}
+
+.tick-button:hover {
+  background: #1b4332;
+  transform: scale(1.1);
+}
+
+/* Fly-in Animation for Announcement Items */
+@keyframes flyIn {
+  0% {
+    opacity: 0;
+    transform: translateX(100%);
+  }
+  60% {
+    opacity: 1;
+    transform: translateX(-10%);
+  }
+  80% {
+    transform: translateX(5%);
+  }
+  100% {
+    transform: translateX(0);
+  }
+}
+
+.announcement-item.flyIn {
+  animation: flyIn 0.8s ease-out forwards;
+}
+
+/* Expanded Announcement Style */
+.announcement-item.expanded {
+  background-color: #e0f7fa;
+  transition: background-color 0.3s ease;
+}
+.announcement-text{
+    color: black;
+}

@@ -1,0 +1,743 @@
+body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Poppins', sans-serif;
+    background: linear-gradient(135deg, #f5f7fa, #c3cfe2);
+  }
+  
+  .container {
+    display: flex;
+    height: 100vh;
+    gap: 24px;
+    padding: 24px;
+    box-sizing: border-box;
+    max-width: 95%;
+    margin: 0 auto;
+}
+  
+  /* Chat Section (Left - 25% width, 100% height) */
+  .chat-section {
+    width: 75%;
+    background: white;
+    padding: 20px;
+    border-radius: 15px;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+  
+  .chat-section:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.2);
+  }
+  
+  .chat-section h2 {
+    font-size: 1.5rem;
+    margin-bottom: 15px;
+    color: #333;
+    text-align: center;
+    font-weight: 600;
+  }
+  
+  .chat-window {
+    flex: 1;
+    overflow-y: auto;
+    margin-bottom: 15px;
+    padding: 15px;
+    border: 1px solid #e0e0e0;
+    border-radius: 10px;
+    background: #f9f9f9;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  
+  .chat-message {
+    margin-bottom: 10px;
+    padding: 12px;
+    border-radius: 10px;
+    max-width: 70%;
+    font-size: 0.9rem;
+    transition: transform 0.2s ease, opacity 0.2s ease;
+    position: relative;
+  }
+  
+  .chat-message.user {
+    background: linear-gradient(135deg, #007bff, #0056b3);
+    color: white;
+    align-self: flex-end;
+    animation: slideInRight 0.3s ease;
+  }
+  
+  .chat-message.bot {
+    background: linear-gradient(135deg, #e9ecef, #d1d5d8);
+    color: #333;
+    align-self: flex-start;
+    animation: slideInLeft 0.3s ease;
+  }
+  
+  @keyframes slideInRight {
+    from {
+      transform: translateX(20px);
+      opacity: 0;
+    }
+    to {
+      transform: translateX(0);
+      opacity: 1;
+    }
+  }
+  
+  @keyframes slideInLeft {
+    from {
+      transform: translateX(-20px);
+      opacity: 0;
+    }
+    to {
+      transform: translateX(0);
+      opacity: 1;
+    }
+  }
+  
+  .chat-input {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+  }
+  
+  .chat-input input {
+    flex: 1;
+    padding: 12px;
+    border-radius: 10px;
+    border: 1px solid #ccc;
+    font-size: 0.9rem;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+  }
+  
+  .chat-input input:focus {
+    border-color: #007bff;
+    outline: none;
+    box-shadow: 0 0 8px rgba(0, 123, 255, 0.3);
+  }
+  
+  .send-btn {
+    background: linear-gradient(135deg, #4caf50, #45a049);
+    color: white;
+    border: none;
+    padding: 12px 20px;
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    font-weight: 500;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+  
+  .send-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  }
+  
+  /* Scrollbar Styling */
+  .chat-window::-webkit-scrollbar {
+    width: 8px;
+  }
+  
+  .chat-window::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 10px;
+  }
+  
+  .chat-window::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 10px;
+  }
+  
+  .chat-window::-webkit-scrollbar-thumb:hover {
+    background: #555;
+  }
+  
+  /* Question and Feedback Section (Middle - 50% width, 100% height) */
+  .question-feedback-section {
+    width: 50%;
+    background: white;
+    padding: 20px;
+    border-radius: 15px;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+  
+  .question-feedback-section:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.2);
+  }
+  
+  .card {
+    background: #f9f9f9;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    width: 92%;
+    text-align: center;
+  }
+  
+  .question {
+    font-weight: bold;
+    margin-bottom: 15px;
+    color: #333;
+    font-size: 1.2rem;
+  }
+  
+  .feedback {
+    color: #4caf50;
+    font-style: italic;
+    margin-top: 15px;
+    font-size: 1rem;
+  }
+  
+  /* Right Section (25% width, 100% height) */
+  .right-section {
+    width: 30%;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+  
+  /* Select Question Section (Top 50% height) */
+  .select-question-sidebar {
+    width: 92%;
+    height: 50%;
+    background: white;
+    padding: 20px;
+    border-radius: 15px;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+  
+  .select-question-sidebar:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.2);
+  }
+  
+  .sidebar-title {
+    font-size: 1.5rem;
+    margin-bottom: 15px;
+    text-align: center;
+    color: #333;
+    font-weight: 600;
+  }
+  
+  .question-nav {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    justify-content: center;
+  }
+  
+  .question-box {
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    border: 2px solid #ccc;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: 0.9rem;
+    font-weight: 500;
+  }
+  
+  .question-box:hover {
+    transform: scale(1.1);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  }
+  
+  .question-box.answered {
+    border-color: #4caf50;
+    background-color: #e8f5e9;
+    color: #2e7d32;
+  }
+  
+  .question-box.visited {
+    border-color: #2196f3;
+    background-color: #e3f2fd;
+    color: #1565c0;
+  }
+  
+  .question-box.not-visited {
+    border-color: #9e9e9e;
+    background-color: #eeeeee;
+    color: #616161;
+  }
+  
+  .question-box.correct {
+    border-color: #4caf50;
+    background-color: #a5d6a7;
+    color: #2e7d32;
+  }
+  
+  .question-box.incorrect {
+    border-color: #f44336;
+    background-color: #ffcdd2;
+    color: #c62828;
+  }
+  
+  .status-bar {
+    margin-top: 20px;
+    text-align: center;
+  }
+  
+  .status-bar p {
+    margin: 5px 0;
+    font-size: 0.9rem;
+    color: #555;
+  }
+
+  .tabs {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 30px;
+    position: sticky;
+    top: 0;
+    background: rgba(255, 255, 255, 0.95);
+    padding: 15px;
+    border-radius: 12px;
+    backdrop-filter: blur(10px);
+    z-index: 100;
+}
+
+.tab-button {
+    padding: 12px 24px;
+    border: none;
+    border-radius: 8px;
+    background: transparent;
+    cursor: pointer;
+    font-weight: 600;
+    color: #64748b;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.tab-button.active {
+    background: #3b82f6;
+    color: white;
+    box-shadow: 0 4px 6px -1px rgba(59, 130, 246, 0.3);
+}
+  
+  /* Upload Answer Section (Bottom 50% height) */
+  .upload-section {
+    background: rgba(255, 255, 255, 0.9);
+    padding: 24px;
+    border-radius: 16px;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(226, 232, 240, 0.6);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.05);
+}
+  
+  .upload-section:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.2);
+  }
+  
+  .textarea {
+    width: 92%;
+    height: 100px;
+    padding: 12px;
+    border-radius: 10px;
+    border: 1px solid #ccc;
+    resize: none;
+    font-size: 0.9rem;
+    transition: border-color 0.3s ease;
+  }
+  
+  .textarea:focus {
+    border-color: #007bff;
+    outline: none;
+  }
+  
+  .file-upload-container {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  
+  .file-upload-label {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 15px;
+    background: linear-gradient(135deg, #007bff, #0056b3);
+    color: white;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+  
+  .file-upload-label:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  }
+  
+  .upload-icon {
+    font-size: 1.2rem;
+  }
+  
+  .upload-text {
+    font-size: 0.9rem;
+    font-weight: 500;
+  }
+  
+  .file-input {
+    display: none;
+  }
+  
+  .file-preview {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px;
+    background: #f9f9f9;
+    border-radius: 10px;
+    border: 1px solid #e0e0e0;
+  }
+  
+  .file-name {
+    font-size: 0.9rem;
+    color: #333;
+  }
+  
+  .file-remove {
+    cursor: pointer;
+    font-size: 1rem;
+    color: #f44336;
+    transition: transform 0.3s ease;
+  }
+  
+  .file-remove:hover {
+    transform: scale(1.2);
+  }
+  
+ .submit-btn {
+    width: 100%;
+    padding: 14px;
+    background: linear-gradient(135deg, #3b82f6, #2563eb);
+    color: white;
+    border: none;
+    border-radius: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: transform 0.2s ease;
+}
+  .submit-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  }
+
+  /* Formatted Formula Box */
+.formula-section {
+  background-color: #eef2ff;
+  padding: 10px;
+  border-left: 5px solid #6366f1;
+  border-radius: 5px;
+  margin-top: 10px;
+}
+
+/* Code Snippet Box */
+.code-section {
+  background-color: #f9fafb;
+  padding: 10px;
+  border-left: 5px solid #facc15;
+  border-radius: 5px;
+  margin-top: 10px;
+}
+
+  .formula-block {
+    text-align: center;
+    font-size: 18px;
+    margin: 10px 0;
+  }
+  
+  .image-section {
+    background-color: #f3f4f6;
+    padding: 10px;
+    border-left: 5px solid #22c55e;
+    border-radius: 5px;
+    margin-top: 10px;
+  }
+  
+  .image-section img {
+    max-width: 100%;
+    border-radius: 10px;
+  }
+  
+  .code-block {
+    margin-top: 10px;
+    background-color: #1e1e1e;
+    border-radius: 8px;
+    padding: 10px;
+    overflow-x: auto;
+  }
+  
+  .code-block button {
+    margin-top: 10px;
+    padding: 5px 10px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  .code-block button:hover {
+    background-color: #0056b3;
+  }
+
+  .link-section h4 {
+    color: #333;
+    margin-bottom: 10px;
+    font-size: 18px;
+  }
+  
+  .link-section a {
+    display: block;
+    margin-top: 10px;
+    color: #007bff;
+    text-decoration: none;
+  }
+  
+  .link-section a:hover {
+    text-decoration: underline;
+  }
+/* Add these styles to your SelfEvaluation.css */
+.container {
+  margin-top: 10vh;
+  display: flex;
+  height: 90vh;
+  border-radius: 5%;
+  -webkit-border-radius: 5%;
+  -moz-border-radius: 5%;
+  -ms-border-radius: 5%;
+  -o-border-radius: 5%;
+}
+
+.left-section {
+  width: 30%;
+  padding: 20px;
+  background-color: #f9f9f9;
+  border-right: 1px solid #ddd;
+  display: flex;
+  flex-direction: column;
+  border-radius: 2%;
+  -webkit-border-radius: 2%;
+  -moz-border-radius: 2%;
+  -ms-border-radius: 2%;
+  -o-border-radius: 2%;
+}
+
+.options {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.option-btn {
+  padding: 10px 20px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  text-align: left;
+}
+
+.option-btn:hover {
+  background-color: #0056b3;
+}
+
+.upload-section {
+  margin-top: 20px;
+}
+
+.file-upload-container {
+  border: 2px dashed #94a3b8;
+  border-radius: 12px;
+  padding: 20px;
+  text-align: center;
+  margin-bottom: 16px;
+  transition: all 0.3s ease;
+}
+
+.file-upload-label {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 12px;
+  background: #f8fafc;
+  color: #64748b;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.file-preview {
+  margin-top: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px;
+  background-color: #f1f1f1;
+  border-radius: 5px;
+}
+
+.file-remove {
+  cursor: pointer;
+}
+
+.question-upload-container {
+  margin-bottom: 20px;
+}
+
+.chat-section {
+  width: 70%;
+  padding: 20px;
+  background-color: #fff;
+}
+
+.chat-window {
+  height: 70vh;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  padding: 10px;
+  margin-bottom: 10px;
+}
+
+.chat-input {
+  display: flex;
+  gap: 10px;
+}
+
+.chat-input input {
+  flex: 1;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+}
+
+.send-btn {
+  padding: 10px 20px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.send-btn:hover {
+  background-color: #0056b3;
+}
+
+.performance-section {
+  width: 100%;
+  padding: 24px;
+  background: rgba(255, 255, 255, 0.9);
+  border-radius: 16px;
+  backdrop-filter: blur(10px);
+}
+
+.performance-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 20px;
+}
+
+.performance-card {
+  background: white;
+  padding: 20px;
+  border-radius: 16px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+  transition: transform 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.performance-card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 4px;
+  height: 100%;
+  background: linear-gradient(180deg, #3b82f6, #60a5fa);
+}
+
+.performance-metrics {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 15px;
+  margin: 15px 0;
+}
+
+.metric {
+  background: #f8fafc;
+  padding: 12px;
+  border-radius: 8px;
+  text-align: center;
+}
+
+.metric-label {
+  font-size: 0.85rem;
+  color: #64748b;
+  margin-bottom: 4px;
+}
+
+.metric-value {
+  font-weight: 600;
+  color: #1e293b;
+}
+
+.performance-date {
+  font-size: 0.85rem;
+  color: #64748b;
+  text-align: center;
+  margin-top: 12px;
+}
+
+/* Progress Ring */
+.progress-ring {
+  position: relative;
+  width: 80px;
+  height: 80px;
+  margin: 0 auto;
+}
+
+.progress-ring circle {
+  fill: none;
+  stroke-width: 6;
+  transform: rotate(-90deg);
+  transform-origin: 50% 50%;
+}
+
+.progress-ring-background {
+  stroke: #e2e8f0;
+}
+
+.progress-ring-foreground {
+  stroke: #3b82f6;
+  stroke-linecap: round;
+  transition: stroke-dashoffset 0.5s ease;
+}
+
+/* Loading Animation */
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+.loading-indicator {
+  background: linear-gradient(90deg, #f8fafc 25%, #e2e8f0 50%, #f8fafc 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+  border-radius: 8px;
+  height: 100px;
+}
