@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import Navbar from "./components/Navbar";
 import SelfEvaluation from "./components/SelfEvaluation";
 import "./Home.css";
@@ -20,6 +20,30 @@ function Home1({ user, setUser ,isLoggedIn, setIsLoggedIn, token, setToken }) {
   // New state: show/hide announcement panel
   const [showAnnouncements, setShowAnnouncements] = useState(false);
   const body = document.body;
+
+// Inside your component
+const announcementRef = useRef(null);
+
+// Click outside handler
+useEffect(() => {
+  const handleClickOutside = (event) => {
+    if (announcementRef.current && !announcementRef.current.contains(event.target)) {
+      // Check if the click was not on the bell icon
+      const bellIcon = document.querySelector('.announcement-bell');
+      if (bellIcon && !bellIcon.contains(event.target)) {
+        setShowAnnouncements(false);
+      }
+    }
+  };
+
+  if (showAnnouncements) {
+    document.addEventListener('mousedown', handleClickOutside);
+  }
+
+  return () => {
+    document.removeEventListener('mousedown', handleClickOutside);
+  };
+}, [showAnnouncements]);
   
   // Assuming classId is stored in the user object
   let classId = null;
@@ -115,7 +139,7 @@ function Home1({ user, setUser ,isLoggedIn, setIsLoggedIn, token, setToken }) {
 
       {/* Announcements Panel (only appears when toggled by the bell icon) */}
       {showAnnouncements && (
-        <div className="announcement-section">
+        <div className="announcement-section" ref={announcementRef}>
           <h2 className="announcement-title">Announcements</h2>
           {loading ? (
             <p>Loading announcements...</p>

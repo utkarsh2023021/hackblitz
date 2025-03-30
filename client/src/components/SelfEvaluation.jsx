@@ -459,9 +459,7 @@ export default function SelfEvaluation() {
         >
           {isListening ? '🛑' : '🎤'}
         </button>
-        <button type="submit" disabled={isChatLoading}>
-          {isChatLoading ? "Sending..." : "Send"}
-        </button>
+
               <button type="submit" disabled={isChatLoading}>
                 {isChatLoading ? "Sending..." : "Send"}
               </button>
