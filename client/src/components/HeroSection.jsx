@@ -5,6 +5,8 @@ import sdgIcon from "../icons/sdg4-icon.png"; // Path to the SDG 4 icon
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { FaFacebookF, FaTwitter, FaLinkedinIn, FaInstagram } from "react-icons/fa";
 import sdg4Icon from "../icons/sdg4-icon2.png";
+import expGif from "../icons/exp.gif";
+import assessGif from "../icons/assess.gif";
 
 import {
   faHome,
@@ -132,37 +134,109 @@ function HeroSection() {
 </div>
 
 {/* Features Section */}
-<h2 className="hs-section-title">Our Features</h2>
-<div id="features" className="hs-features-section">
+<section id="ai-features" className="ai-features-section">
+      <h2 className="ai-section-heading">Our AI-Powered Features</h2>
+      
+      {/* Feature 1 */}
+      <div className="ai-feature-row">
+        <div className="ai-feature-content">
+          <h3 className="ai-feature-title">AI-Powered Learning & Evaluation</h3>
+          <ul className="ai-feature-list">
+            <li>AI-generated questions tailored to your level</li>
+            <li>Multi-parameter evaluation system</li>
+            <li>Instant AI feedback with explanations</li>
+            <li>Comprehensive self-evaluation panel</li>
+          </ul>
+        </div>
+        <div className="ai-feature-media">
+          <img 
+            src="https://media.giphy.com/media/l378khQxt68syiWJy/giphy.gif" 
+            alt="AI learning features" 
+            className="ai-feature-gif"
+            loading="lazy"
+          />
+        </div>
+      </div>
 
-  <div className="hs-section-card">
-    <div className="hs-section-content">
-      <h3 className="hs-section-title">Interactive Learning</h3>
-      <p>Engage with hands-on activities and digital tools that make learning fun and effective.</p>
-    </div>
-    <div className="hs-section-image">Image Here</div>
-  </div>
+      {/* Feature 2 */}
+      <div className="ai-feature-row reverse">
+        <div className="ai-feature-content">
+          <h3 className="ai-feature-title">Interactive & Adaptive Learning</h3>
+          <ul className="ai-feature-list">
+            <li>24/7 AI chatbot tutor</li>
+            <li>Community discussion pages</li>
+            <li>Adaptive learning paths</li>
+          </ul>
+        </div>
+        <div className="ai-feature-media">
+          <img 
+            src="https://media.giphy.com/media/3o7aD2d7hy9ktXNDP2/giphy.gif" 
+            alt="Interactive learning" 
+            className="ai-feature-gif"
+            loading="lazy"
+          />
+        </div>
+      </div>
 
-  <div className="hs-section-card">
-    <div className="hs-section-content">
-      <h3 className="hs-section-title">Expert Instructors</h3>
-      <p>Learn from industry experts and thought leaders dedicated to excellence in education.</p>
-    </div>
-    <div className="hs-section-image">Image Here</div>
-  </div>
+      {/* Feature 3 */}
+      <div className="ai-feature-row">
+        <div className="ai-feature-content">
+          <h3 className="ai-feature-title">Seamless Assessment & Tracking</h3>
+          <ul className="ai-feature-list">
+            <li>One-click test access</li>
+            <li>Detailed performance tracking</li>
+          </ul>
+        </div>
+        <div className="ai-feature-media">
+          <img 
+  src={assessGif} 
+  alt="User experience" 
+  loading="lazy"
+  onError={(e) => {
+    e.target.onerror = null; 
+    e.target.src = 'https://media.giphy.com/media/3o7TKsQ8XfDQsHJuUM/giphy.gif';
+  }}
+  style={{
+    marginTop:"30px",
+    width: "90%",
+    height: "70vh",
 
-  <div className="hs-section-card">
-    <div className="hs-section-content">
-      <h3 className="hs-section-title">Global Community</h3>
-      <p>Join a network of learners from around the world and collaborate on projects and ideas.</p>
-    </div>
-    <div className="hs-section-image">Image Here</div>
-  </div>
-</div>
+    transform: "scaleX(-1)"
+  }} 
+          />
+        </div>
+      </div>
 
+      {/* Feature 4 */}
+      <div className="ai-feature-row reverse">
+        <div className="ai-feature-content">
+          <h3 className="ai-feature-title">User Experience & Community</h3>
+          <ul className="ai-feature-list">
+            <li>Intuitive, beautiful UI/UX</li>
+            <li>Transparent donation system</li>
+          </ul>
+        </div>
+        <div className="ai-feature-media">
+        <img 
+  src={expGif} 
+  alt="User experience" 
+  loading="lazy"
+  onError={(e) => {
+    e.target.onerror = null; 
+    e.target.src = 'https://media.giphy.com/media/3o7TKsQ8XfDQsHJuUM/giphy.gif';
+  }}
+  style={{
+    marginTop:"180px",
+    width: "100%",
+    height: "90vh",
 
-      {/* Integrate AboutUs component between the Features and Footer */}
-      <AboutUs isDarkMode={false} />
+    transform: "scaleX(-1)"
+  }} 
+/>
+
+        </div>
+      </div>
+    </section>
 
       {/* Footer Section */}
       <footer className="hs-footer">
