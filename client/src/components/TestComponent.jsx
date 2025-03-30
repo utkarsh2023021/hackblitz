@@ -257,10 +257,10 @@ const TestComponent = () => {
       ) : (
         <main className="test-main">
           {selectedTest.type === "multiple-choice" && (
-            <MCQQuiz setStartTest={setStartTest} questions={selectedTest.questions} testId={selectedTest._id} />
+            <MCQQuiz setStartTest={setStartTest} questions={selectedTest.questions} testId={selectedTest._id}  timeLimit={selectedTest.time} />
           )}
           {(selectedTest.type === "short-answer" || selectedTest.type === "long-answer") && (
-            <ShortAnswer setStartTest={setStartTest} questions={selectedTest.questions} testId={selectedTest._id} />
+            <ShortAnswer setStartTest={setStartTest} questions={selectedTest.questions} testId={selectedTest._id}  timeLimit={selectedTest.time} />
           )}
         </main>
       )}

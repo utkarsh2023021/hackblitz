@@ -13,7 +13,7 @@ import DiscussionSection from "./Discussion";
 import Auth from "../Login";
 import Evaluate from "./examevaluate";
 
-function Navbar({ setActiveScreen, isLoggedIn, setIsLoggedIn, user, setUser, isDarkMode, setIsDarkMode, toggleAnnouncementPanel, announcementCount }) {
+function Navbar({ setActiveScreen, isLoggedIn, setIsLoggedIn, user, setUser,token, setToken, isDarkMode, setIsDarkMode, toggleAnnouncementPanel, announcementCount }) {
   // Existing state variables
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
