@@ -10,6 +10,8 @@ import test from '../models/test.js';
 import { handlePdfUpload } from '../controllers/pdfhandler.js';
 import { examevaluateController } from '../controllers/examevaluateController.js';
 import { studentOwnTest } from '../controllers/studentOwnTestController.js';
+import { evaluateFilesController } from '../controllers/evaluatemecontroller.js';
+
 
 const router = express.Router();
 
@@ -172,6 +174,16 @@ router.get("/student-performance", async (req, res) => {
 router.get('/performance/:userId', studentOwnTest);
 
 
+router.post(
+  "/exam-evaluate",
+  upload.fields([
+    { name: "questionFile", maxCount: 1 },
+    { name: "studentAnswerFile", maxCount: 1 },
+    { name: "correctAnswerFile", maxCount: 1 },
+  ]),
+  examevaluateController
+);
+
 router.post('/upload-pdf', upload.single('file'), async (req, res) => {
   try {
     const { studentId } = req.body; // Assuming the student ID is available in the request
@@ -189,15 +201,10 @@ router.post('/upload-pdf', upload.single('file'), async (req, res) => {
   }
 });
 
-router.post(
-  "/exam-evaluate",
-  upload.fields([
-    { name: "questionFile", maxCount: 1 },
-    { name: "studentAnswerFile", maxCount: 1 },
-    { name: "correctAnswerFile", maxCount: 1 },
-  ]),
-  examevaluateController
-);
+
+
+
+router.post('/evaluate-answer', express.json(), evaluateFilesController);
 
 
 

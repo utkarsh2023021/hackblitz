@@ -1,237 +1,116 @@
-// server/controllers/selfEvaluateController.js
 import { GoogleGenerativeAI } from "@google/generative-ai";
-import { processPdfWithDocumentAI } from "./pdfhandler.js";
 import dotenv from "dotenv";
 dotenv.config();
 
 const genAI = new GoogleGenerativeAI(process.env.API_KEY);
 
-export const selfEvaluateController = async (req, res) => {
-  try {
-    if (!req.files || !req.files.questionsFile || !req.files.answersFile) {
-      return res.status(400).json({ error: "Both questions and answers files are required." });
-    }
-
-    // Process both files
-    const questions = await processFile(req.files.questionsFile);
-    const answers = await processFile(req.files.answersFile);
-
-    if (questions.length !== answers.length) {
-      return res.status(400).json({ 
-        error: "Number of questions and answers must match",
-        questionsCount: questions.length,
-        answersCount: answers.length
-      });
-    }
-
-    const evaluations = [];
-    let totalScore = 0;
-
-    for (let i = 0; i < questions.length; i++) {
-      const question = questions[i];
-      const answer = answers[i];
-
-      if (!question || !answer) {
-        evaluations.push({
-          questionNumber: i + 1,
-          question,
-          answer,
-          score: 0,
-          feedback: "Empty question or answer",
-          metrics: {
-            clarity: 0,
-            depth: 0,
-            accuracy: 0,
-            originality: 0,
-            practicality: 0
-          }
-        });
-        continue;
-      }
-
-      console.log(`Evaluating question ${i + 1}:`, question.substring(0, 50) + '...');
-
-      const prompt = `Perform a detailed self-evaluation on the following Q&A pair:
-      
-Question: ${question}
-Answer: ${answer}
-
-Provide JSON output with:
-1. Overall score (0-1)
-2. Constructive feedback
-3. Metrics scores (0-1) for:
-   - Clarity (answer clarity)
-   - Depth (thoroughness)
-   - Accuracy (factual correctness)
-   - Originality (unique insights)
-   - Practicality (real-world applicability)
-
-Format strictly as:
-{
-  "score": number,
-  "feedback": string,
-  "metrics": {
-    "clarity": number,
-    "depth": number,
-    "accuracy": number,
-    "originality": number,
-    "practicality": number
-  }
-}
-
-Evaluation guidelines:
-- Be objective and constructive
-- Score 0 for empty/invalid answers
-- Focus on answer quality
-- Avoid generic feedback
-- Consider answer length relative to question complexity`;
-
-      try {
-        const model = genAI.getGenerativeModel({ model: "gemini-pro" });
-        const result = await model.generateContent(prompt);
-        const response = await result.response;
-        const text = response.text();
-        
-        let jsonString = text.trim();
-        jsonString = jsonString.replace(/```(json)?/gi, "").replace(/```/gi, "").trim();
-        
-        let evalResult;
-        try {
-          evalResult = JSON.parse(jsonString);
-        } catch (parseError) {
-          console.error("Error parsing AI response:", parseError);
-          evalResult = { 
-            score: 0, 
-            feedback: "Evaluation failed - invalid response format", 
-            metrics: {} 
-          };
-        }
-
-        const score = Number(evalResult.score) || 0;
-        totalScore += score;
-
-        evaluations.push({
-          questionNumber: i + 1,
-          question,
-          answer,
-          score,
-          feedback: evalResult.feedback || "No feedback provided",
-          metrics: {
-            clarity: evalResult.metrics?.clarity ?? 0,
-            depth: evalResult.metrics?.depth ?? 0,
-            accuracy: evalResult.metrics?.accuracy ?? 0,
-            originality: evalResult.metrics?.originality ?? 0,
-            practicality: evalResult.metrics?.practicality ?? 0
-          }
-        });
-      } catch (genAIError) {
-        console.error("AI evaluation error:", genAIError);
-        evaluations.push({
-          questionNumber: i + 1,
-          question,
-          answer,
-          score: 0,
-          feedback: "AI evaluation service error",
-          metrics: {}
-        });
-      }
-    }
-
-    const overallScore = evaluations.length > 0 ? totalScore / evaluations.length : 0;
-    
-    res.json({ 
-      success: true,
-      overallScore: parseFloat(overallScore.toFixed(2)),
-      evaluations,
-      summary: {
-        totalQuestions: questions.length,
-        evaluated: evaluations.length,
-        averageMetrics: calculateAverageMetrics(evaluations)
-      }
-    });
-
-  } catch (error) {
-    console.error("Error in self-evaluation:", error);
-    res.status(500).json({ 
-      success: false,
-      error: "Failed to perform self-evaluation",
-      details: error.message 
-    });
-  }
+const calculateAverageMetrics = (evaluations) => {
+  const metricsSum = { clarity: 0, depth: 0, accuracy: 0, originality: 0, practicality: 0 };
+  evaluations.forEach(evalResult => {
+    metricsSum.clarity += evalResult.metrics.clarity || 0;
+    metricsSum.depth += evalResult.metrics.depth || 0;
+    metricsSum.accuracy += evalResult.metrics.accuracy || 0;
+    metricsSum.originality += evalResult.metrics.originality || 0;
+    metricsSum.practicality += evalResult.metrics.practicality || 0;
+  });
+  const count = evaluations.length || 1;
+  return {
+    clarity: parseFloat((metricsSum.clarity / count).toFixed(2)),
+    depth: parseFloat((metricsSum.depth / count).toFixed(2)),
+    accuracy: parseFloat((metricsSum.accuracy / count).toFixed(2)),
+    originality: parseFloat((metricsSum.originality / count).toFixed(2)),
+    practicality: parseFloat((metricsSum.practicality / count).toFixed(2))
+  };
 };
 
-// Enhanced file processor with PDF support
-async function processFile(file) {
+export const evaluateFilesController = async (req, res) => {
   try {
-    if (file.name.endsWith('.pdf')) {
-      // Process PDF using Document AI
-      const pdfText = await processPdfWithDocumentAI(file.data);
-      return splitContentIntoItems(pdfText);
-    } else if (file.name.endsWith('.json')) {
-      const content = file.data.toString('utf8');
-      const data = JSON.parse(content);
-      return Array.isArray(data) ? data : [data];
-    } else if (file.name.endsWith('.csv')) {
-      const content = file.data.toString('utf8');
-      return parseCSV(content);
-    } else {
-      // Text file processing
-      const content = file.data.toString('utf8');
-      return splitContentIntoItems(content);
+    const { questionsText, answersText } = req.body;
+    if (!questionsText || !answersText) {
+      return res.status(400).json({ success: false, error: "Both questions and answers text are required." });
     }
+
+    const prompt = `
+      You are an advanced evaluation system. The input consists of two texts:
+      1. The 'Questions Text' which contains several questions, possibly numbered.
+      2. The 'Answers Text' which contains corresponding answers.
+
+      Your task is to:
+      - Identify each question and its corresponding answer, even if they are multiline or written as paragraphs.
+      - Pair them correctly based on numbering, context, and structure.
+      - Provide a detailed evaluation for each pair based on relevance, clarity, accuracy, depth, originality, and practicality.
+      - Provide a score between 0-100 for each answer.
+      - Provide feedback on how the answer can be improved.
+      - Generate a JSON response where each entry includes: {question, answer, score, feedback, metrics}.
+      
+      Questions Text: ${questionsText}
+      Answers Text: ${answersText}
+
+      Format: [{ "question": "Question Text", "answer": "Answer Text", "score": number, "feedback": "Feedback Text", "metrics": { "clarity": number, "depth": number, "accuracy": number, "originality": number, "practicality": number } }]
+    `;
+
+    const evaluations = [];
+    try {
+      const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash-thinking-exp-01-21" });
+      const result = await model.generateContent(prompt);
+      const text = (await result.response).text();
+      const cleanedText = text.replace(/```json|```/g, "").trim();  // Remove code block markers
+      const evalResults = JSON.parse(cleanedText);
+      
+
+      let totalScore = 0;
+      const scaleMetric = (value) => {
+        const num = parseFloat(value) || 0;
+        
+        if (num <= 1) return parseFloat((num * 100).toFixed(2)); // 0.9 → 90%
+        if (num <= 10) return parseFloat((num * 10).toFixed(2));  // 9 → 90%
+        if (num <= 100) return parseFloat(num.toFixed(2));        // 90 → 90%
+        return parseFloat((num / 100).toFixed(2));                // 900 → 9%
+      };
+
+      
+      evalResults.forEach((evalResult, index) => {
+        const rawScore = Number(evalResult.score) || 0;
+        const score = Math.min(Math.max(rawScore > 1 ? rawScore / 100 : rawScore, 0), 1);
+        
+        totalScore += score;
+      
+        evaluations.push({
+          questionNumber: index + 1,
+          question: evalResult.question,
+          answer: evalResult.answer,
+          score: parseFloat((score ).toFixed(2)), // Convert to percentage
+          feedback: evalResult.feedback || "No feedback provided",
+          metrics: {
+            clarity: scaleMetric(evalResult.metrics?.clarity || 0),
+            depth: scaleMetric(evalResult.metrics?.depth || 0),
+            accuracy: scaleMetric(evalResult.metrics?.accuracy || 0),
+            originality: scaleMetric(evalResult.metrics?.originality || 0),
+            practicality: scaleMetric(evalResult.metrics?.practicality || 0)
+          }
+        });
+      });
+      
+
+      const overallScore = evaluations.length > 0 ? totalScore / evaluations.length : 0;
+
+      res.json({
+        success: true,
+        overallScore: parseFloat(overallScore.toFixed(2)),
+        evaluations,
+        summary: {
+          totalQuestions: evalResults.length,
+          evaluated: evaluations.length,
+          averageMetrics: calculateAverageMetrics(evaluations)
+        }
+      });
+    } catch (error) {
+      console.error("Evaluation Error:", error);
+      res.status(500).json({ success: false, error: "Evaluation failed", details: error.message });
+    }
+
   } catch (error) {
-    console.error(`Error processing ${file.name}:`, error);
-    return [];
+    console.error("Error in evaluateFilesController:", error);
+    res.status(500).json({ success: false, error: "Evaluation failed", details: error.message });
   }
-}
-
-// Helper to split text into logical items
-function splitContentIntoItems(content) {
-  // First try splitting by double newlines (common in PDFs)
-  let items = content.split(/\n\s*\n/);
-  
-  // If that produces too few items, try other delimiters
-  if (items.length <= 1) {
-    items = content.split(/(?:\d+[.)]\s*|\n\s*[-•*]\s*)/).filter(Boolean);
-  }
-  
-  return items
-    .map(item => item.trim())
-    .filter(item => item.length > 0);
-}
-
-// Improved CSV parser
-function parseCSV(content) {
-  return content.split('\n')
-    .map(line => {
-      // Handle quoted CSV values
-      const match = line.match(/"(.*?)"|([^,]+)/);
-      return match ? (match[1] || match[2]).trim() : '';
-    })
-    .filter(line => line.length > 0);
-}
-
-// Calculate average metrics across all evaluations
-function calculateAverageMetrics(evaluations) {
-  const metrics = {
-    clarity: 0,
-    depth: 0,
-    accuracy: 0,
-    originality: 0,
-    practicality: 0
-  };
-
-  if (evaluations.length === 0) return metrics;
-
-  evaluations.forEach(evalResult => {
-    for (const metric in metrics) {
-      metrics[metric] += eval.metrics[metric] || 0;
-    }
-  });
-
-  for (const metric in metrics) {
-    metrics[metric] = parseFloat((metrics[metric] / evaluations.length).toFixed(2));
-  }
-
-  return metrics;
-}
+};
