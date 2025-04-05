@@ -62,31 +62,54 @@ const ShortAnswer = ({ setStartTest, questions: initialQuestions = [], testId, o
 
   const handleFileUpload = async (qIndex, file) => {
     if (submitted) return;
-
-    // Validate file type and size
-    const allowedTypes = ["text/plain", "application/pdf", "image/jpeg", "image/png"];
-    const maxSize = 5 * 1024 * 1024; // 5MB
-
+  
+    const allowedTypes = ["application/pdf", "image/jpeg", "image/png", "text/plain"];
+    const maxSize = 5 * 1024 * 1024;
+  
     if (!allowedTypes.includes(file.type)) {
-      alert("Invalid file type. Please upload a text, PDF, or image file.");
+      alert("Only PDF, PNG, JPG, and TXT files are allowed.");
       return;
     }
-
+  
     if (file.size > maxSize) {
-      alert("File size exceeds the limit of 5MB.");
+      alert("File size exceeds the 5MB limit.");
       return;
     }
-
+  
     setUploading(true);
-
-    // Simulate file upload delay (replace with actual upload logic)
-    setTimeout(() => {
+  
+    const formData = new FormData();
+    formData.append("file", file);
+    formData.append("studentId", userId); // 👈 Include studentId
+  
+    try {
+      const res = await axios.post("http://localhost:5000/api/auth/upload-pdf", formData, {
+        headers: { "Content-Type": "multipart/form-data" },
+      });
+  
+      const extractedText = res.data.text || "";
+  
+      const updatedAnswers = [...answers];
+      updatedAnswers[qIndex] = extractedText;
+      setAnswers(updatedAnswers);
+  
+      const updatedVisited = [...visited];
+      updatedVisited[qIndex] = true;
+      setVisited(updatedVisited);
+  
       const updatedFiles = [...files];
       updatedFiles[qIndex] = file;
       setFiles(updatedFiles);
+    } catch (err) {
+      console.error("File upload failed:", err);
+      alert("Failed to extract text from file.");
+    } finally {
       setUploading(false);
-    }, 1000);
+    }
   };
+  
+  
+  
 
   const handleNextOrSubmit = () => {
     if (currentQ < questions.length - 1) {
