@@ -25,7 +25,7 @@ app.use('/api/chat', chatRoutes);
 app.use('/api/class', classRoutes);
 app.use('/api/teachers', teacherRoutes);
 
-// MongoDB Connection with Logging
+
 mongoose.connect(process.env.MONGO_URI)
   .then(() => {
     console.log('✅ Connected to MongoDB');
