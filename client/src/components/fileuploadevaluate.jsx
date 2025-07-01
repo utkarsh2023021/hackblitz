@@ -12,13 +12,14 @@ const FileUploadEvaluation = ({ userId }) => {
   const [isProcessing, setIsProcessing] = useState(false);
   const [showExtractedText, setShowExtractedText] = useState(false);
   const [evaluationResult, setEvaluationResult] = useState(null);
+  const backend_link = "https://hackblitz-nine.vercel.app";
 
   // Function to upload a file to /upload-pdf and get its extracted text
   const uploadAndExtractText = async (file) => {
     const formData = new FormData();
     formData.append("file", file);
     formData.append("studentId", userId);
-    const response = await axios.post("http://localhost:5000/api/auth/upload-pdf", formData, {
+    const response = await axios.post(`${backend_link}/api/auth/upload-pdf`, formData, {
       headers: { "Content-Type": "multipart/form-data" },
     });
     return response.data;
@@ -59,7 +60,7 @@ const FileUploadEvaluation = ({ userId }) => {
     setIsProcessing(true);
     setUploadStatus("Evaluating answers...");
     try {
-      const response = await axios.post("http://localhost:5000/api/auth/evaluate-answer", {
+      const response = await axios.post(`${backend_link}/api/auth/evaluate-answer`, {
         userId,
         questionsText: extractedQuestionsText,
         answersText: extractedAnswersText

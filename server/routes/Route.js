@@ -92,7 +92,7 @@ router.get("/tests", async (req, res) => {
 router.post("/tests/:testId/attempt", async (req, res) => {
   const { testId } = req.params;
   const { studentId } = req.body; // Student ID should be passed in the request body
-
+console.log("these are all the details: "+ testId+" , "+studentId);
   try {
     // Find the test by ID
     const Test = await test.findById(testId);

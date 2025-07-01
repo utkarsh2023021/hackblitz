@@ -8,6 +8,8 @@ const ItemCard = memo(({ userId,item, isMyDonation, onRemove, onEdit, onRequest 
   const [showRemoveConfirmation, setShowRemoveConfirmation] = useState(false);
   const [tagsExpanded, setTagsExpanded] = useState(false);
 
+  const backend_link = "https://hackblitz-nine.vercel.app";
+
   const prevImage = () =>
     setCarouselIndex(prev => (prev === 0 ? item.images.length - 1 : prev - 1));
   const nextImage = () =>
@@ -38,7 +40,7 @@ const ItemCard = memo(({ userId,item, isMyDonation, onRemove, onEdit, onRequest 
 
   const requestDonation = (donationId, requestedBy, message) => {
     console.log("Request message:", message);
-    return fetch('http://localhost:5000/api/donations/request', {
+    return fetch(`${backend_link}/api/donations/request`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ donationId, requestedBy, message })

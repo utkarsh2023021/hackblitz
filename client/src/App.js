@@ -21,7 +21,7 @@ function App() {
           
           setIsLoading(true);
           const decoded = jwtDecode(token);
-          const response = await axios.get(`http://localhost:5000/api/auth/profile/${decoded.id}`);
+          const response = await axios.get(`https://hackblitz-nine.vercel.app/api/auth/profile/${decoded.id}`);
           setUser(response.data.username);
           localStorage.setItem('username', response.data.username);
           setIsLoggedIn(true);

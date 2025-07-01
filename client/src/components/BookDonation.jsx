@@ -4,6 +4,7 @@ import { FaFilter, FaSearch, FaTimes, FaBell } from 'react-icons/fa';
 import { jwtDecode } from 'jwt-decode';
 import FilterBox from './FilterBox';
 import ItemCard from './ItemCard';
+const backend_link = "https://hackblitz-nine.vercel.app";
 
 const BookDonationPage = () => {
   // Local state for donations, modals, and notifications
@@ -58,7 +59,7 @@ const BookDonationPage = () => {
 
   // Fetch donations from backend on mount
   useEffect(() => {
-    fetch('/api/donations')
+    fetch(`${backend_link}/api/donations`)
       .then(res => res.json())
       .then(data => {
         const mappedItems = data.map(donation => ({
@@ -78,7 +79,7 @@ const BookDonationPage = () => {
   // Fetch notifications for current user
   const fetchNotifications = async () => {
     try {
-      const response = await fetch(`/api/auth/${userId}/notifications`);
+      const response = await fetch(`${backend_link}/api/auth/${userId}/notifications`);
       if (!response.ok) {
         throw new Error('Failed to fetch notifications');
       }
@@ -91,7 +92,7 @@ const BookDonationPage = () => {
   
   const handleDeleteNotification = async (notificationId) => {
     try {
-      const response = await fetch(`/api/auth/${userId}/notifications/${notificationId}`, {
+      const response = await fetch(`${backend_link}/api/auth/${userId}/notifications/${notificationId}`, {
         method: 'DELETE'
       });
       if (!response.ok) {
@@ -111,7 +112,7 @@ const BookDonationPage = () => {
   };
 
   const removeDonation = (id) => {
-    fetch(`/api/donations/${id}`, { method: 'DELETE' })
+    fetch(`${backend_link}/api/donations/${id}`, { method: 'DELETE' })
       .then(res => res.json())
       .then(() => setItems(items.filter(item => item.id !== id)))
       .catch(error => console.error('Error deleting donation:', error));
@@ -135,7 +136,7 @@ const BookDonationPage = () => {
       donatedBy: userId
     };
 
-    fetch('/api/donations', {
+    fetch(`${backend_link}/api/donations`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(donationData)
@@ -177,7 +178,7 @@ const BookDonationPage = () => {
       donatedBy: userId
     };
 
-    fetch(`/api/donations/${editingItem.id}`, {
+    fetch(`${backend_link}/api/donations/${editingItem.id}`, {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(updatedData)

@@ -58,7 +58,7 @@ export const saveTestDetails = async (req, res) => {
         timeTaken: timeTaken,
         answers: answers,
         attemptedAt: new Date(),
-        time:time,
+        time:timeTaken,
       });
     }
 

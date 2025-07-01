@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import "./styles/TestCreator.css";
+const backend_link = "https://hackblitz-nine.vercel.app";
 
 function TestCreator({ teacherId, onClose }) {
   const [testName, setTestName] = useState("");
@@ -29,7 +30,7 @@ function TestCreator({ teacherId, onClose }) {
     const fetchTeacherTests = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:5000/api/auth/tests?teacherId=${teacherId}`
+          `${backend_link}/api/auth/tests?teacherId=${teacherId}`
         );
         setTeacherTests(response.data.tests);
       } catch (err) {
@@ -63,7 +64,7 @@ function TestCreator({ teacherId, onClose }) {
     setError(null);
     try {
       const response = await axios.post(
-        "http://localhost:5000/api/auth/generate-questions",
+        `${backend_link}/api/auth/generate-questions`,
         {
           topic,
           type,
@@ -129,7 +130,7 @@ function TestCreator({ teacherId, onClose }) {
 
     try {
       const response = await axios.post(
-        "http://localhost:5000/api/auth/tests",
+        `${backend_link}/api/auth/tests`,
         testData
       );
       if (response.data.success) {
@@ -159,7 +160,7 @@ function TestCreator({ teacherId, onClose }) {
   const fetchStudentPerformance = async (studentId, testId) => {
     try {
       const response = await axios.get(
-        `http://localhost:5000/api/auth/student-performance`,
+        `${backend_link}/api/auth/student-performance`,
         {
           params: {
             studentId,
@@ -178,7 +179,7 @@ function TestCreator({ teacherId, onClose }) {
   const viewTestDetails = async (test) => {
     try {
       const testResponse = await axios.get(
-        `http://localhost:5000/api/auth/tests?teacherId=${teacherId}`
+        `${backend_link}/api/auth/tests?teacherId=${teacherId}`
       );
       if (!testResponse.data || !testResponse.data.tests) {
         throw new Error("Test data not found in the response.");
@@ -194,7 +195,7 @@ function TestCreator({ teacherId, onClose }) {
 
       if (selectedTest.attemptedBy && selectedTest.attemptedBy.length > 0) {
         const studentsResponse = await axios.post(
-          "http://localhost:5000/api/auth/students",
+          `${backend_link}/api/auth/students`,
           {
             studentIds: selectedTest.attemptedBy,
           }

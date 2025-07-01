@@ -14,6 +14,8 @@ const MCQQuiz = ({ setStartTest, questions: initialQuestions = [], testId, onSub
   const [score, setScore] = useState(0);
   const [currentReview, setCurrentReview] = useState(0);
   const [timerWarning, setTimerWarning] = useState(false);
+  const backend_link = "https://hackblitz-nine.vercel.app";
+
 
   // Get user id from token stored in localStorage
   let userId = null;
@@ -104,10 +106,10 @@ const MCQQuiz = ({ setStartTest, questions: initialQuestions = [], testId, onSub
     };
 
     try {
-      await axios.post('http://localhost:5000/api/auth/test-details', payload);
+      await axios.post(`${backend_link}/api/auth/test-details`, payload);
       console.log('Test attempt saved successfully');
 
-      await axios.post(`/api/auth/tests/${testId}/attempt`, {
+      await axios.post(`${backend_link}/api/auth/tests/${testId}/attempt`, {
         studentId: userId, // Pass the student's ID
       });
     } catch (error) {

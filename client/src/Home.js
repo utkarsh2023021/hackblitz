@@ -10,6 +10,9 @@ import AboutUs from "./components/AboutUs";
 import { jwtDecode } from 'jwt-decode';
 import HeroSection from "./components/HeroSection";
 import Evaluate from "./components/Examevaluate";
+
+
+const backend_link = "https://hackblitz-nine.vercel.app";
 function Home1({ user, setUser ,isLoggedIn, setIsLoggedIn, token, setToken }) {
   const [isDarkMode, setIsDarkMode] = useState(false);
   const savedScreen = localStorage.getItem("activeScreen");
@@ -65,7 +68,7 @@ useEffect(() => {
       setLoading(true);
       setError(null);
       try {
-        const response = await fetch("/api/class/announcements", {
+        const response = await fetch(`${backend_link}/api/class/announcements`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ classId }),
@@ -194,22 +197,23 @@ useEffect(() => {
       )}
       
       
-  {activeScreen === 1 ? (
-    <>
-      <HeroSection setActiveScreen={setActiveScreen}
-        user={user}
-        setUser={setUser}
-        token={token}
-        setToken={setToken}
-        isDarkMode={isDarkMode}
-        setIsDarkMode={setIsDarkMode}
-        // Pass the announcement count and toggle function to Navbar
-        announcementCount={announcements.length}
-        toggleAnnouncementPanel={toggleAnnouncementPanel}
-        isLoggedIn={isLoggedIn}
-        setIsLoggedIn={setIsLoggedIn}/>
-    </>
-  ) : activeScreen === 2 ? (
+      {activeScreen === 1 && (
+    <HeroSection 
+      setActiveScreen={setActiveScreen}
+      user={user}
+      setUser={setUser}
+      token={token}
+      setToken={setToken}
+      isDarkMode={isDarkMode}
+      setIsDarkMode={setIsDarkMode}
+      announcementCount={announcements.length}
+      toggleAnnouncementPanel={toggleAnnouncementPanel}
+      isLoggedIn={isLoggedIn}
+      setIsLoggedIn={setIsLoggedIn}
+    />
+  )}
+
+  {activeScreen === 2 ? (
     <DiscussionSection />
   ) : activeScreen === 3 ? (
     <TestComponent />

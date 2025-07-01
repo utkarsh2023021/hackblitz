@@ -38,6 +38,7 @@ function Navbar({ setActiveScreen, isLoggedIn, setIsLoggedIn, user, setUser,toke
 
   // Read user type from local storage (it should be "Student" or "Teacher")
   const userType = localStorage.getItem("userType");
+  const backend_link = "https://hackblitz-nine.vercel.app";
 
   // Close sign in dropdown when clicked outside
   useEffect(() => {
@@ -157,7 +158,7 @@ function Navbar({ setActiveScreen, isLoggedIn, setIsLoggedIn, user, setUser,toke
       return;
     }
     try {
-      const response = await axios.get(`http://localhost:5000/api/auth/profile/${userId}`);
+      const response = await axios.get(`${backend_link}/api/auth/profile/${userId}`);
       const data = response.data;
       setProfileData(data);
       console.log("Profile Data:", data);

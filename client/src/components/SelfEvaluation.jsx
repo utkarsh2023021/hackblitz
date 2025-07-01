@@ -43,6 +43,9 @@ export default function SelfEvaluation() {
   const chatInputRef = useRef(null);
   const [showOverlay, setShowOverlay] = useState(false);
 
+
+  const backend_link = "https://hackblitz-nine.vercel.app";
+
   const {
     transcript,
     listening,
@@ -111,7 +114,7 @@ export default function SelfEvaluation() {
     try {
       setLoadingPerformance(true);
       const response = await axios.get(
-        `http://localhost:5000/api/auth/performance/${userId}`
+        `${backend_link}/api/auth/performance/${userId}`
       );
       const data = Array.isArray(response.data?.data)
         ? response.data.data
@@ -135,7 +138,7 @@ export default function SelfEvaluation() {
     setFeedback("Evaluating...\nYour response is being processed.");
     try {
       const response = await axios.post(
-        "http://localhost:5000/api/auth/evaluate-answer",
+        `${backend_link}/api/auth/evaluate-answer`,
         {
           userId,
           question: questions[selectedQuestionNumber - 1],
@@ -170,7 +173,7 @@ export default function SelfEvaluation() {
     formData.append("studentId", userId);
     try {
       const response = await axios.post(
-        "http://localhost:5000/api/auth/upload-pdf",
+        `${backend_link}/api/auth/upload-pdf`,
         formData,
         {
           headers: { "Content-Type": "multipart/form-data" },
@@ -209,7 +212,7 @@ export default function SelfEvaluation() {
           ? `${extractedText}\n\nUser Query: ${message}`
           : message;
         const response = await axios.post(
-          "http://localhost:5000/api/auth/selfEvaluation",
+          `${backend_link}/api/auth/selfEvaluation`,
           {
             query: fullPrompt,
           }

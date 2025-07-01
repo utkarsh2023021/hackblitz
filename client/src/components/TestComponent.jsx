@@ -35,7 +35,7 @@ const TestComponent = () => {
     }
   }
 
-  console.log("thsi is userId: " + userId);
+
 
   useEffect(() => {
     const fetchTests = async () => {
@@ -45,7 +45,7 @@ const TestComponent = () => {
         setLoading(true);
         setError(null);
         
-        const response = await axios.get(`http://localhost:5000/api/auth/tests`, {
+        const response = await axios.get(`https://hackblitz-nine.vercel.app/api/auth/tests`, {
           params: {
             studentId: userId,
           }
@@ -72,7 +72,7 @@ const TestComponent = () => {
     const fetchUserTestDetails = async () => {
       if (!userId) return;
       try {
-        const response = await axios.get(`http://localhost:5000/api/auth/test-details?userId=${userId}`);
+        const response = await axios.get(`https://hackblitz-nine.vercel.app/api/auth/test-details?userId=${userId}`);
         // response.data.tests is now an array of test IDs
         setUserTestDetails(response.data.tests);
       } catch (err) {
