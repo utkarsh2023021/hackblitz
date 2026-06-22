@@ -56,7 +56,7 @@ export const selfEvaluationController = async (req, res) => {
     
     🚀 Generate a response following these exact instructions.`;
 
-    const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash-thinking-exp-01-21" });
+    const model = genAI.getGenerativeModel({ model: "gemini-3.5-flash" });
     const responseContent = await model.generateContent(prompt);
     let generatedText = responseContent.response.text();
     console.log("Raw generated response:", generatedText);

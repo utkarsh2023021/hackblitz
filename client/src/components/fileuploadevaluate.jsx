@@ -12,7 +12,7 @@ const FileUploadEvaluation = ({ userId }) => {
   const [isProcessing, setIsProcessing] = useState(false);
   const [showExtractedText, setShowExtractedText] = useState(false);
   const [evaluationResult, setEvaluationResult] = useState(null);
-  const backend_link = "https://hackblitz-nine.vercel.app";
+  const backend_link = "http://localhost:5000";
 
   // Function to upload a file to /upload-pdf and get its extracted text
   const uploadAndExtractText = async (file) => {

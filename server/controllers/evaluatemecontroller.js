@@ -51,7 +51,7 @@ export const evaluateFilesController = async (req, res) => {
 
     const evaluations = [];
     try {
-      const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash-thinking-exp-01-21" });
+      const model = genAI.getGenerativeModel({ model: "gemini-3.5-flash" });
       const result = await model.generateContent(prompt);
       const text = (await result.response).text();
       const cleanedText = text.replace(/```json|```/g, "").trim();  // Remove code block markers

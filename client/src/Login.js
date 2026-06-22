@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import Home from './Home';
 const bg = require('./icons/Login.png');
-const backend_link = "https://hackblitz-nine.vercel.app";
+const backend_link = "http://localhost:5000";
 
 // Student Login Form Component
 const LoginForm = ({ onSuccess, setUser }) => {

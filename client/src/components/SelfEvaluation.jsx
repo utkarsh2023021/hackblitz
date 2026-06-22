@@ -44,7 +44,7 @@ export default function SelfEvaluation() {
   const [showOverlay, setShowOverlay] = useState(false);
 
 
-  const backend_link = "https://hackblitz-nine.vercel.app";
+  const backend_link = "http://localhost:5000";
 
   const {
     transcript,

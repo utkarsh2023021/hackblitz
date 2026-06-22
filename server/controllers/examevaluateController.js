@@ -35,7 +35,7 @@ export const examevaluateController = async (req, res) => {
       return res.status(400).json({ error: "Mismatched number of questions, student answers, and correct answers" });
     }
 
-    const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash-thinking-exp-01-21" });
+    const model = genAI.getGenerativeModel({ model: "gemini-3.5-flash" });
     
     const evaluations = [];
     let overallScore = 0;

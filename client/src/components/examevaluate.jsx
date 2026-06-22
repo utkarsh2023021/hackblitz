@@ -11,7 +11,7 @@ const Evaluate = ({ teacherId }) => {
   const [correctAnswerText, setCorrectAnswerText] = useState("");
   const [evaluationResult, setEvaluationResult] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
-  const backend_link = "https://hackblitz-nine.vercel.app";
+  const backend_link = "http://localhost:5000";
 
 
   const handleEvaluate = async () => {

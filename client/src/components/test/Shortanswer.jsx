@@ -16,7 +16,7 @@ const ShortAnswer = ({ setStartTest, questions: initialQuestions = [], testId, o
   const [evaluating, setEvaluating] = useState(false);
   const [currentReview, setCurrentReview] = useState(0);
   const [uploading, setUploading] = useState(false);
-  const backend_link = "https://hackblitz-nine.vercel.app";
+  const backend_link = "http://localhost:5000";
 
   // Get user id from token stored in localStorage
   let userId = null;

@@ -12,7 +12,7 @@ export const generateQuestion = async (req, res) => {
       return res.status(400).json({ error: "Missing required fields" });
     }
 
-    const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash-thinking-exp-01-21" });
+    const model = genAI.getGenerativeModel({ model: "gemini-3.5-flash" });
     
     // System instructions: instruct the model to return structured JSON.
     const systemInstructions = `You are an educational content generator specialized in creating questions. 

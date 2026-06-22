@@ -38,7 +38,7 @@ function Navbar({ setActiveScreen, isLoggedIn, setIsLoggedIn, user, setUser,toke
 
   // Read user type from local storage (it should be "Student" or "Teacher")
   const userType = localStorage.getItem("userType");
-  const backend_link = "https://hackblitz-nine.vercel.app";
+  const backend_link = "http://localhost:5000";
 
   // Close sign in dropdown when clicked outside
   useEffect(() => {
