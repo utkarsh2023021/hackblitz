@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { jwtDecode } from 'jwt-decode';
 import './styles/DiscussionSection.css'; // Import external CSS
-const backend_link = "http://localhost:5000";
+const backend_link = "https://hackblitz-nine.vercel.app";
 
 const DiscussionSection = () => {
   const token = localStorage.getItem('token');

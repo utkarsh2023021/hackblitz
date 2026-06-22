@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import Home from './Home';
 const bg = require('./icons/Login.png');
-const backend_link = "http://localhost:5000";
+const backend_link = "https://hackblitz-nine.vercel.app";
 
 // Student Login Form Component
 const LoginForm = ({ onSuccess, setUser }) => {
@@ -155,7 +154,6 @@ const TeacherLoginForm = ({ onSuccess, setUser }) => {
 
     try {
       const res = await axios.post(`${backend_link}/api/teachers/login`, formData);
-      console.log("Teacher Login Data:", res.data);
 
       if (res.data.ok) {
         setMessage({ text: 'Teacher Login Successful!', type: 'success' });
@@ -247,11 +245,11 @@ const TeacherSignupForm = ({ onSuccess }) => {
 };
 
 // Auth Component
-const Auth = ({ user, setUser, isLoggedIn, setIsLoggedIn, type, authState }) => {
-  // Local toggle state is initialized with the provided authState.
-  const [localIsLogin, setLocalIsLogin] = useState(authState === 'login');
+// Auth Component
+const Auth = ({ user, setUser, isLoggedIn, setIsLoggedIn }) => {
+  const [localIsLogin, setLocalIsLogin] = useState(true);
+  const [role, setRole] = useState('student'); // Tracks if they are logging in as Student or Teacher
 
-  // This handles success for both student and teacher logins/signups.
   const handleSuccess = () => {
     setIsLoggedIn(true);
   };
@@ -264,94 +262,6 @@ const Auth = ({ user, setUser, isLoggedIn, setIsLoggedIn, type, authState }) => 
     }
   }, [setUser, setIsLoggedIn]);
 
-  
-  if (isLoggedIn) {
-    localStorage.setItem("activeScreen", 1);
-    return <Home user={user} isLoggedIn={isLoggedIn} setUser={setUser} token={localStorage.getItem('token')} />;
-  }
-
-  // Render the form based on the provided type and local toggle state
-  if (type && authState) {
-    if (type === 'teacher') {
-      return (
-        <div style={{
-          backgroundImage: `url(${bg})`,
-          backgroundSize: "cover",
-          backgroundRepeat: "no-repeat",
-          backgroundPosition: "center",
-          height: "100vh",
-          width: "100vw",
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          overflow: "hidden"
-        }}>
-          <div className="auth-container">
-            <div className="auth-box">
-              <h2>Teacher {localIsLogin ? 'Login' : 'Signup'}</h2>
-              {localIsLogin ? (
-                <TeacherLoginForm onSuccess={handleSuccess} setUser={setUser} />
-              ) : (
-                <TeacherSignupForm onSuccess={handleSuccess} />
-              )}
-              <p>
-                {localIsLogin ? "Don't have an account?" : 'Already have an account?'}{' '}
-                <span
-                  onClick={() => setLocalIsLogin(!localIsLogin)}
-                  className="toggle-btn"
-                  style={{ cursor: 'pointer', color: '#b39040' }}
-                >
-                  {localIsLogin ? 'Signup' : 'Login'}
-                </span>
-              </p>
-            </div>
-          </div>
-        </div>
-      );
-    } else {
-      // For student type
-      return (
-        <div style={{
-          backgroundImage: `url(${bg})`,
-          backgroundSize: "cover",
-          backgroundRepeat: "no-repeat",
-          backgroundPosition: "center",
-          height: "100vh",
-          width: "100vw",
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          overflow: "hidden"
-        }}>
-          <div className="auth-container">
-            <div className="auth-box">
-            <h2 style={{ display: "flex", flexDirection: "column" }}>
-  Student {localIsLogin ? 'Login' : 'Signup'}
-</h2>
-
-              {localIsLogin ? (
-                <LoginForm onSuccess={handleSuccess} setUser={setUser} />
-              ) : (
-                <SignupForm onSuccess={handleSuccess} />
-              )}
-              <p>
-                {localIsLogin ? "Don't have an account?" : 'Already have an account?'}{' '}
-                <span
-                  onClick={() => setLocalIsLogin(!localIsLogin)}
-                  className="toggle-btn"
-                  style={{ cursor: 'pointer', color: '#b39040' }}
-                >
-                  {localIsLogin ? 'Signup' : 'Login'}
-                </span>
-              </p>
-            </div>
-          </div>
-        </div>
-      );
-    }
-  }
-
-  // Fallback UI when authState and type are not provided: with toggle
   return (
     <div style={{
       backgroundImage: `url(${bg})`,
@@ -367,18 +277,58 @@ const Auth = ({ user, setUser, isLoggedIn, setIsLoggedIn, type, authState }) => 
     }}>
       <div className="auth-container">
         <div className="auth-box">
-          <h2>{localIsLogin ? 'Login' : 'Signup'}</h2>
-          {localIsLogin ? (
-            <LoginForm onSuccess={handleSuccess} setUser={setUser} />
+          
+          {/* 🟢 NEW: Role Toggle Buttons */}
+          <div style={{ display: 'flex', justifyContent: 'center', gap: '10px', marginBottom: '10px' }}>
+            <button 
+              onClick={() => setRole('student')}
+              style={{
+                width: 'auto',
+                padding: '8px 20px',
+                backgroundColor: role === 'student' ? '#b39040' : 'transparent',
+                color: role === 'student' ? 'white' : '#ccc',
+                border: role === 'student' ? 'none' : '2px solid #ccc',
+                borderRadius: '20px',
+                cursor: 'pointer',
+                transition: 'all 0.3s ease'
+              }}
+            >
+              Student
+            </button>
+            <button 
+              onClick={() => setRole('teacher')}
+              style={{
+                width: 'auto',
+                padding: '8px 20px',
+                backgroundColor: role === 'teacher' ? '#b39040' : 'transparent',
+                color: role === 'teacher' ? 'white' : '#ccc',
+                border: role === 'teacher' ? 'none' : '2px solid #ccc',
+                borderRadius: '20px',
+                cursor: 'pointer',
+                transition: 'all 0.3s ease'
+              }}
+            >
+              Teacher
+            </button>
+          </div>
+
+          <h2 style={{ padding: "20px 0", fontSize: "32px" }}>
+            {role === 'teacher' ? 'Teacher' : 'Student'} {localIsLogin ? 'Login' : 'Signup'}
+          </h2>
+
+          {/* 🟢 Render the correct form based on the selected role */}
+          {role === 'student' ? (
+            localIsLogin ? <LoginForm onSuccess={handleSuccess} setUser={setUser} /> : <SignupForm onSuccess={handleSuccess} />
           ) : (
-            <SignupForm onSuccess={handleSuccess} />
+            localIsLogin ? <TeacherLoginForm onSuccess={handleSuccess} setUser={setUser} /> : <TeacherSignupForm onSuccess={handleSuccess} />
           )}
-          <p>
+
+          <p style={{ marginTop: '20px' }}>
             {localIsLogin ? "Don't have an account?" : 'Already have an account?'}{' '}
             <span
               onClick={() => setLocalIsLogin(!localIsLogin)}
               className="toggle-btn"
-              style={{ cursor: 'pointer', color: '#b39040' }}
+              style={{ cursor: 'pointer', color: '#b39040', fontWeight: 'bold' }}
             >
               {localIsLogin ? 'Signup' : 'Login'}
             </span>

@@ -11,7 +11,7 @@ function QuestionGenerator() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
-  const backend_link = "http://localhost:5000";
+  const backend_link = "https://hackblitz-nine.vercel.app";
 
   const fetchQuestions = async () => {
     setLoading(true);

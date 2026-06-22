@@ -1,51 +1,46 @@
 import './App.css';
 import Auth from './Login';
 import { useState, useEffect } from 'react';
-import Home from  "./Home"
-import {jwtDecode} from 'jwt-decode';
+import Home from "./Home";
+import { jwtDecode } from 'jwt-decode';
 import axios from 'axios';
-
-
 
 function App() {
   const [user, setUser] = useState(localStorage.getItem('username') || null);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true); // Start as true to prevent UI flash
   const [token, setToken] = useState(localStorage.getItem('token') || '');
 
   useEffect(() => {
     const fetchUserData = async () => {
-      const userType=localStorage.getItem('userType');
-      if (token && userType==='Student') {
+      const userType = localStorage.getItem('userType');
+      if (token && userType === 'Student') {
         try {
-          
-          setIsLoading(true);
           const decoded = jwtDecode(token);
-          const response = await axios.get(`http://localhost:5000/api/auth/profile/${decoded.id}`);
+          const response = await axios.get(`https://hackblitz-nine.vercel.app/api/auth/profile/${decoded.id}`);
           setUser(response.data.username);
           localStorage.setItem('username', response.data.username);
           setIsLoggedIn(true);
         } catch (error) {
           console.error("Error fetching user data:", error);
-          // Clear invalid token
-          //localStorage.removeItem('token');
-        //  setToken('');
-        } finally {
-          setIsLoading(false);
+          // Optional: Handle invalid token cleanup here
         }
-      }
-      if (token && userType==='Teacher')
-      {
+      } else if (token && userType === 'Teacher') {
         setIsLoggedIn(true);
       }
+      setIsLoading(false); // Ensure loading stops regardless of the outcome
     };
 
     fetchUserData();
   }, [token]);
 
+  if (isLoading) {
+    return <div>Loading...</div>; // Render a fallback while checking auth state
+  }
+
   return (
     <div className="App">
-      {!isLoading && (
+      {isLoggedIn ? (
         <Home
           user={user}
           setUser={setUser}
@@ -53,6 +48,14 @@ function App() {
           setIsLoggedIn={setIsLoggedIn}
           token={token}
           setToken={setToken}
+        />
+      ) : (
+        <Auth
+          user={user}
+          setUser={setUser}
+          isLoggedIn={isLoggedIn}
+          setIsLoggedIn={setIsLoggedIn}
+         
         />
       )}
     </div>

@@ -14,7 +14,7 @@ const MCQQuiz = ({ setStartTest, questions: initialQuestions = [], testId, onSub
   const [score, setScore] = useState(0);
   const [currentReview, setCurrentReview] = useState(0);
   const [timerWarning, setTimerWarning] = useState(false);
-  const backend_link = "http://localhost:5000";
+  const backend_link = "https://hackblitz-nine.vercel.app";
 
 
   // Get user id from token stored in localStorage
